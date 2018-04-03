@@ -1,0 +1,46 @@
+{
+  "name": "apibuilder-code-generator",
+  "version": "0.0.0",
+  "description": "A set of code generators for apibuilder.io",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "lint": "eslint . --cache --ignore-pattern '!.eslintrc.js'",
+    "precommit": "yarn lint",
+    "prepush": "yarn test",
+    "test": "mocha --recursive test",
+    "local-server": "node localServer.js 9003"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/brightsystemsinc/apibuilder-code-generator"
+  },
+  "keywords": [
+    "apibuilder",
+    "swagger"
+  ],
+  "author": "Ryan Martin",
+  "bugs": {
+    "url": "https://github.com/brightsystemsinc/apibuilder-code-generator/issues"
+  },
+  "dependencies": {
+    "handlebars": "^4.0.11",
+    "pluralize": "^7.0.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.2.2",
+    "eslint": "^4.19.1",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.10.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.7.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "husky": "^0.14.3",
+    "mocha": "^2.4.5"
+  },
+  "engines": {
+    "node": ">=6.0.0"
+  }
+}
