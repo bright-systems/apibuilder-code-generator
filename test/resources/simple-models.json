@@ -1,0 +1,132 @@
+{
+  "service": {
+    "apidoc": {
+      "version": "0.12.61-21-g7ab62854"
+    },
+    "name": "Simple Models",
+    "organization": {
+      "key": "bright"
+    },
+    "application": {
+      "key": "simple-models"
+    },
+    "namespace": "com.getbright",
+    "version": "0.0.1",
+    "info": {
+      "license": {
+        "name": "MIT",
+        "url": "http://opensource.org/licenses/MIT"
+      },
+      "contact": {
+        "name": "Ryan Martin",
+        "url": "http://getbright.com",
+        "email": "ryan@getbright.com"
+      }
+    },
+    "headers": [],
+    "imports": [],
+    "enums": [{
+      "name": "colors",
+      "plural": "colors",
+      "values": [{
+        "name": "black",
+        "attributes": [],
+        "description": "As the night."
+      }, {
+        "name": "brown",
+        "attributes": [],
+        "description": "Like a fox."
+      }, {
+        "name": "gray",
+        "attributes": [],
+        "description": "'s Anatomy."
+      }, {
+        "name": "white",
+        "attributes": [],
+        "description": "Hot heat."
+      }],
+      "attributes": []
+    }],
+    "unions": [],
+    "models": [{
+      "name": "house",
+      "plural": "houses",
+      "fields": [{
+        "name": "id",
+        "type": "long",
+        "required": true,
+        "attributes": [],
+        "description": "Internal unique identifier for this house."
+      }, {
+        "name": "sq_ft",
+        "type": "double",
+        "required": true,
+        "attributes": [],
+        "description": "The square footage of this house."
+      }, {
+        "name": "built_on",
+        "type": "date-iso8601",
+        "required": true,
+        "attributes": [],
+        "description": "The date on which the house was finished."
+      }, {
+        "name": "occupied",
+        "type": "boolean",
+        "required": true,
+        "attributes": [],
+        "description": "Whether or not the house is occupied."
+      }, {
+        "name": "properties",
+        "type": "json",
+        "required": false,
+        "attributes": []
+      }, {
+        "name": "cost",
+        "type": "decimal",
+        "required": true,
+        "attributes": []
+      }],
+      "attributes": [],
+      "description": "Where a mouse might live."
+    }, {
+      "name": "mouse",
+      "plural": "mice",
+      "fields": [{
+        "name": "guid",
+        "type": "uuid",
+        "required": true,
+        "attributes": [],
+        "description": "Internal unique identifier for this mouse."
+      }, {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "attributes": [],
+        "description": "The unique name for this mouse."
+      }, {
+        "name": "age",
+        "type": "integer",
+        "required": true,
+        "attributes": [],
+        "description": "The age of this mouse."
+      }, {
+        "name": "color",
+        "type": "colors",
+        "required": true,
+        "attributes": [],
+        "description": "The color of this mouse."
+      }, {
+        "name": "last_meal",
+        "type": "date-time-iso8601",
+        "required": false,
+        "attributes": []
+      }],
+      "attributes": [],
+      "description": "Like Mickey or Mighty."
+    }],
+    "resources": [],
+    "attributes": [],
+    "base_url": "https://getbright.com",
+    "description": "Simple models for testing."
+  }
+}
