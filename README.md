@@ -1,16 +1,16 @@
 # apibuilder-code-generator
 A set of code generators for [apibuilder.io]
 
-## Deployment
-TBD, but the intention is to deploy this to AWS Lambda behind API Gateway.
 
-Until there is a better process:
-```
-  rm -rf node_modules
-  npm install --production
-  zip -r apibuilder-code-generator.zip . -x *.git* -x *apibuilder-code-generator.zip* -x cloud_formation/\* -x *aws-sdk*
-```
-Then upload the .zip files to the two Lambda functions.
+## API
+This service should adhere to the standard ApiBuilder generator API:
+https://app.apibuilder.io/apicollective/apibuilder-generator/latest
+
+
+## Deployment
+CodePipeline, using this template: https://s3.amazonaws.com/com.getbright.cloudformation/lambda-pipeline.yml
+
+Commits to master will kick off an automatic deployment.
 
 
 ## Development

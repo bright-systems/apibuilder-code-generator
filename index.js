@@ -41,6 +41,10 @@ exports.generatorsHandler = function(event, context, callback) {
   }
 }
 
+exports.healthCheckHandler = function(event, context, callback) {
+  callback(null, { statusCode: 200, body: JSON.stringify({ status: 'healthy' }) })
+}
+
 exports.invocationsHandler = function(event, context, callback) {
   try {
     const body = JSON.parse(event.body)
