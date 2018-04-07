@@ -18,7 +18,7 @@ Resources:
             Path: '/generators'
             Method: get
       FunctionName: !Sub '${AWS::StackName}-generators'
-      Handler: index.configHandler
+      Handler: index.generatorsHandler
       Runtime: nodejs6.10
   HealthCheckFunction:
     Type: AWS::Serverless::Function
@@ -44,7 +44,7 @@ Resources:
             Path: '/invocations/{key}'
             Method: post
       FunctionName: !Sub '${AWS::StackName}-invocations'
-      Handler: index.healthCheckHandler
+      Handler: index.invocationsHandler
       Runtime: nodejs6.10
   GeneratorsFunctionLogRetention:
     Type: AWS::Logs::LogGroup
