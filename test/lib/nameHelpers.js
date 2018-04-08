@@ -24,6 +24,8 @@ describe('#toSnakeCase', function() {
     assert.equal(helper.toSnakeCase('My Class Name'), 'my_class_name')
     assert.equal(helper.toSnakeCase('My Cla$$ Name'), 'my_cla_name')
     assert.equal(helper.toSnakeCase('_My_Class_Name'), 'my_class_name')
+    assert.equal(helper.toSnakeCase('myClassName'), 'my_class_name')
+    assert.equal(helper.toSnakeCase('MyClassName'), 'my_class_name')
   })
 })
 
