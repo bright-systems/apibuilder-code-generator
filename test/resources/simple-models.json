@@ -125,7 +125,10 @@
       "description": "Like Mickey or Mighty."
     }],
     "resources": [],
-    "attributes": [],
+    "attributes": [{
+      "name": "build-bucket",
+      "value": "com.example.build-artifacts"
+    }],
     "base_url": "https://getbright.com",
     "description": "Simple models for testing."
   }

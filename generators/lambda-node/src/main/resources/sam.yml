@@ -1,0 +1,26 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: '{{name}} deployment'
+Resources:
+{{#each resources}}
+  {{toClassName type}}Function:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../../..
+      Events:
+{{#each operations}}
+        {{toClassName method}}:
+          Type: Api
+          Properties:
+            Path: '{{path}}'
+            Method: {{toLowerCase method}}
+{{/each}}
+      FunctionName: !Sub '${AWS::StackName}-{{toSnakeCase type '-'}}'
+      Handler: src/main/js/handlers/{{toMethodName type}}.handler
+      Runtime: nodejs6.10
+  {{toClassName type}}FunctionLogRetention:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub '/aws/lambda/${ {{toClassName type}}Function}'
+      RetentionInDays: 7
+{{/each}}

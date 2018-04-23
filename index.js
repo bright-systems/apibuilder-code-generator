@@ -1,4 +1,5 @@
 const fs = require('fs')
+const arrayHelpers = require('./lib/arrayHelpers')
 const dataTypes = require('./lib/dataTypes')
 const Handlebars = require('handlebars')
 const path = require('path')
@@ -10,7 +11,7 @@ const url = require('url')
 const configFilename = '.config'
 const generatorsRootDir = path.join(__dirname, 'generators')
 
-registerAll([dataTypes, nameHelpers, postgresHelpers, stringHelpers])
+registerAll([arrayHelpers, dataTypes, nameHelpers, postgresHelpers, stringHelpers])
 
 exports.generatorsHandler = function(event, context, callback) {
   try {
@@ -161,10 +162,6 @@ Handlebars.registerHelper('ifEq', function(a, b, opts) {
 
 Handlebars.registerHelper('ifHasBody', function(parameters, opts) {
   if (hasBody(parameters)) { return opts.fn(this) } else { return opts.inverse(this) }
-})
-
-Handlebars.registerHelper('ifNotLast', function(arr, index, opts) {
-  if (arr.length - 1 > index) { return opts.fn(this) } else { return opts.inverse(this) }
 })
 
 Handlebars.registerHelper('ifReservedWord', function(word, language, opts) {

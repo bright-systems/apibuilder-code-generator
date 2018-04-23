@@ -1,0 +1,24 @@
+{
+  "name": "{{application.key}}",
+  "version": "{{version}}",
+  "private": true,
+  "scripts": {
+    "lint": "eslint . --cache --ignore-pattern '!.eslintrc.js'",
+    "precommit": "yarn lint",
+    "prepush": "yarn test",
+    "test": "mocha --recursive src/test"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^4.18.2",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.9.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "husky": "^0.14.3",
+    "mocha": "^5.0.1"
+  },
+  "main": "src/js/index.js",
+  "author": "{{info.contact.name}} <{{info.contact.email}}>"
+}

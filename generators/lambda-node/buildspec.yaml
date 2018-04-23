@@ -1,0 +1,23 @@
+version: 0.2
+phases:
+  install:
+    commands:
+      - sudo apt-get update -y && sudo apt-get install -y make apt-transport-https
+      - curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+      - echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+      - sudo apt-get update -y && sudo apt-get install -y yarn
+  pre_build:
+    commands:
+      - yarn install --prod
+  build:
+    commands:
+      - aws cloudformation package
+          --template-file ./src/main/resources/sam.yml
+          --s3-bucket {{#ifAttributeExists attributes 'buildspec-config'}}{{value.buildBucket}}{{else}}{your-bucket-here}{{/ifAttributeExists}}
+          --s3-prefix {{application.key}}
+          --output-template-file sam-packaged.yml
+artifacts:
+  files:
+    - ./src/main/resources/sam.yml
+    - sam-packaged.yml
+  discard-paths: yes
