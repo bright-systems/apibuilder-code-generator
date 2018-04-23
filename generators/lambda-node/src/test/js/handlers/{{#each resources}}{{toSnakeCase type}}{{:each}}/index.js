@@ -1,5 +1,5 @@
 const assert = require('assert')
-const index = require('../../../main/js/handlers/{{toSnakeCase type}}/index')
+const index = require('../../../../main/js/handlers/{{toSnakeCase type}}/index')
 
 describe('{{toSnakeCase type}}.handler', () => {
 
@@ -7,7 +7,7 @@ describe('{{toSnakeCase type}}.handler', () => {
   it('should work for {{method}}', () => {
     index.handler(
       {
-        httpMethod: {{method}}
+        httpMethod: '{{method}}'
         {{!-- TODO: Pass in appropriate test data --}}
       },
       {},

@@ -1,10 +1,10 @@
 const assert = require('assert')
-const impl = require('../../../main/js/handlers/{{toSnakeCase type}}/impl')
+const impl = require('../../../../main/js/handlers/{{toSnakeCase type}}/impl')
 
 describe('{{toSnakeCase type}}.impl', () => {
 
 {{#each operations}}
-  describe('{{toMethodName method}}', () => {}
+  describe('{{toMethodName method}}', () => {
     it('should work', () => {
       impl.{{toMethodName method}}(
         {},
