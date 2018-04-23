@@ -5,10 +5,10 @@ exports.handler = (event, context, callback) => {
 {{#each operations}}
     case '{{toLowerCase method}}':
       impl.{{toMethodName method}}(event, context, callback)
-      break;
+      break
 {{/each}}
     default:
       callback(null, { statusCode: 405, body: JSON.stringify({ code: 405, message: 'HTTP method [' + event.httpMethod + '] does not exist for endpoint [' + event.path + '].' }) })
-      break;
+      break
   }
 }
