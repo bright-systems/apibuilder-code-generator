@@ -1,4 +1,5 @@
 const fs = require('fs')
+const apiBuilderHelpers = require('./lib/apiBuilderHelpers')
 const arrayHelpers = require('./lib/arrayHelpers')
 const dataTypes = require('./lib/dataTypes')
 const Handlebars = require('handlebars')
@@ -11,7 +12,7 @@ const url = require('url')
 const configFilename = '.config'
 const generatorsRootDir = path.join(__dirname, 'generators')
 
-registerAll([arrayHelpers, dataTypes, nameHelpers, postgresHelpers, stringHelpers])
+registerAll([apiBuilderHelpers, arrayHelpers, dataTypes, nameHelpers, postgresHelpers, stringHelpers])
 
 exports.generatorsHandler = function(event, context, callback) {
   try {
