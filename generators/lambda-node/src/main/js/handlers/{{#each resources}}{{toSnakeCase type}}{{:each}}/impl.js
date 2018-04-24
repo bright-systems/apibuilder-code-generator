@@ -3,5 +3,7 @@
 exports.{{toMethodName method}} = (event, context, callback) => {
   callback(null, { statusCode: 501, body: JSON.stringify({ code: 501, message: 'Not implemented' }) })
 }
+{{#ifNotLast ../operations @index}}
 
+{{/ifNotLast}}
 {{/each}}
