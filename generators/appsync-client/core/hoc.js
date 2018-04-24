@@ -1,3 +1,7 @@
+import React, { Component } from 'react'
+import { ApolloProvider } from 'react-apollo'
+import { Rehydrated } from 'aws-appsync-react'
+
 const withApollo = (Comp, getClientFunc) => {
   class Wrapper extends Component {
     render() {
@@ -14,4 +18,4 @@ const withApollo = (Comp, getClientFunc) => {
   return Wrapper
 }
 
-export withApollo
+export { withApollo }

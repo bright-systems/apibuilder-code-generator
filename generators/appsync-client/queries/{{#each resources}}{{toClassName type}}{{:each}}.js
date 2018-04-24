@@ -1,3 +1,6 @@
+import gql from 'graphql-tag'
+import { graphql, compose } from 'react-apollo'
+
 {{#each operations}}
 const {{toClassName method}}{{capitalize ../type}} = gql`
 {{#ifEq method 'GET'}}query{{else}}mutation{{/ifEq}} {{toClassName method}}{{capitalize ../type}}({{#each parameters}}${{toMethodName name}}: {{translateGraphQL type _root_.enums}}{{#if required}}!{{/if}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}) {
@@ -6,9 +9,11 @@ const {{toClassName method}}{{capitalize ../type}} = gql`
 {{/ifNotLast}}
 {{/each}}{{/successResponseType}}
   }
-}
+}`
 
 {{/each}}
+export { {{#each operations}} {{toClassName method}}{{capitalize ../type}}{{#ifNotLast ../operations @index}},{{/ifNotLast}}{{/each}} }
+
 const withAppSync{{capitalize type}} = compose(
 {{#hasOperation operations 'get'}}
   graphql(Get{{capitalize ../type}}, {
@@ -25,7 +30,7 @@ const withAppSync{{capitalize type}} = compose(
         return props.data.get{{capitalize ../type}} || {}
       }
     }
-  }),
+  }){{#hasOperation ../operations 'put'}},{{/hasOperation}}
 {{/hasOperation}}
 {{#hasOperation operations 'put'}}
   graphql(Put{{capitalize ../type}}, {
@@ -35,6 +40,6 @@ const withAppSync{{capitalize type}} = compose(
         optimisticResponse: () => ({ put{{capitalize ../type}}: { ...{{toMethodName ../type}}, __typename: '{{toClassName ../type}}', version: 1 } })
       })
     })
-  }),
+  })
 {{/hasOperation}}
 )
