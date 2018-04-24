@@ -3,8 +3,8 @@ import { graphql, compose } from 'react-apollo'
 
 {{#each operations}}
 const {{toClassName method}}{{capitalize ../type}} = gql`
-{{#ifEq method 'GET'}}query{{else}}mutation{{/ifEq}} {{toClassName method}}{{capitalize ../type}}({{#each parameters}}${{toMethodName name}}: {{translateGraphQL type _root_.enums}}{{#if required}}!{{/if}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}) {
-  {{toMethodName method}}{{capitalize ../type}}({{#each parameters}}{{toMethodName name}}: ${{toMethodName name}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}) {
+{{#ifEq method 'GET'}}query{{else}}mutation{{/ifEq}} {{toClassName method}}{{capitalize ../type}}({{#allRequestFields . ../_root_.models ', '}}${{name}}: {{translateGraphQL type}}{{/allRequestFields}}) {
+  {{toMethodName method}}{{capitalize ../type}}({{#allRequestFields . ../_root_.models ', '}}{{name}}: ${{name}}{{/allRequestFields}}) {
 {{#successResponseType responses ../_root_.models}}{{#each fields}}    {{name}}{{#ifNotLast ../fields @index}}
 {{/ifNotLast}}
 {{/each}}{{/successResponseType}}
@@ -12,8 +12,6 @@ const {{toClassName method}}{{capitalize ../type}} = gql`
 }`
 
 {{/each}}
-export { {{#each operations}} {{toClassName method}}{{capitalize ../type}}{{#ifNotLast ../operations @index}},{{/ifNotLast}}{{/each}} }
-
 const withAppSync{{capitalize type}} = compose(
 {{#hasOperation operations 'get'}}
   graphql(Get{{capitalize ../type}}, {
@@ -43,3 +41,5 @@ const withAppSync{{capitalize type}} = compose(
   })
 {{/hasOperation}}
 )
+
+export { {{#each operations}}{{toClassName method}}{{capitalize ../type}}, {{/each}}withAppSync{{capitalize type}} }
