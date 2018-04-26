@@ -5,7 +5,7 @@ describe('{{toSnakeCase type}}.impl', () => {
 {{#each operations}}
   describe('{{toMethodName method}}', () => {
     it('should work', () => {
-      impl.{{toMethodName method}}(
+      return impl.{{toMethodName method}}(
         {},
         {},
         (err, data) => {

@@ -4,7 +4,7 @@ exports.handler = (event, context, callback) => {
   switch (event.httpMethod.toLowerCase()) {
 {{#each operations}}
     case '{{toLowerCase method}}':
-      impl.{{toMethodName method}}(event, context, callback)
+      return impl.{{toMethodName method}}(event, context, callback)
       break
 {{/each}}
     default:
