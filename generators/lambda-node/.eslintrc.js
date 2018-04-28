@@ -1,6 +1,8 @@
 module.exports = {
   'extends': 'standard',
   'globals': {
+    'after': false,
+    'before': false,
     'describe': false,
     'it': false
   },

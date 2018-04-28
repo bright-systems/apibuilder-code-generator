@@ -4,7 +4,7 @@ const index = require('../../../../main/js/handlers/{{toSnakeCase type}}/index')
 describe('{{toSnakeCase type}}.handler', () => {
 {{#each operations}}
   it('should work for {{method}}', () => {
-    index.handler(
+    return index.handler(
       {
         httpMethod: '{{method}}'
         {{!-- TODO: Pass in appropriate test data --}}
