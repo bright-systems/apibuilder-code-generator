@@ -12,7 +12,7 @@ Resources:
         {{toClassName method}}:
           Type: Api
           Properties:
-            Path: '{{path}}'
+            Path: '{{pathToSwagger path}}'
             Method: {{toLowerCase method}}
 {{/each}}
       FunctionName: !Sub '${AWS::StackName}-{{toSnakeCase type '-'}}'
