@@ -17,7 +17,19 @@ Resources:
 {{/each}}
       FunctionName: !Sub '${AWS::StackName}-{{toSnakeCase type '-'}}'
       Handler: src/main/js/handlers/{{toMethodName type}}.handler
-      Runtime: nodejs6.10
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - Version: 2012-10-17
+          Statement:
+            - Action:
+              - secretsmanager:GetSecretValue
+              Effect: Allow
+              Resource: '*'
+            - Action:
+              - kms:Decrypt
+              Effect: Allow
+              Resource: '*'
+      Runtime: nodejs8.10
   {{toClassName type}}FunctionLogRetention:
     Type: AWS::Logs::LogGroup
     Properties:
