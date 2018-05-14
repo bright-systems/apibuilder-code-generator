@@ -8,17 +8,14 @@ class Client {
   }
 
   configure(config) {
-    return Auth.currentCredentials()
-      .then(credentials => {
-        this.client = new AWSAppSyncClient({
-          url: config.graphqlEndpoint,
-          region: config.region,
-          auth: {
-            type: AUTH_TYPE.AWS_IAM,
-            credentials
-          }
-        })
-      })
+    this.client = new AWSAppSyncClient({
+      url: config.graphqlEndpoint,
+      region: config.region,
+      auth: {
+        type: AUTH_TYPE.AWS_IAM,
+        credentials: () => Auth.currentCredentials()
+      }
+    })
   }
 }
 
