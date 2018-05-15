@@ -36,3 +36,11 @@ Resources:
       LogGroupName: !Sub '/aws/lambda/${ {{toClassName type}}Function}'
       RetentionInDays: 7
 {{/each}}
+Outputs:
+{{#each resources}}
+  {{toClassName type}}Function:
+    Description: The name of the Lambda function for the {{toClassName type}} model
+    Value: !Ref {{toClassName type}}Function
+    Export:
+      Name: !Sub '${AWS::StackName}-functions-{{toClassName type}}'
+{{/each}}
