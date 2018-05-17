@@ -57,7 +57,7 @@ Resources:
       Definition: |
         type Mutation {
 {{#each resources}}{{#each operations}}{{#ifNEq method 'GET'}}
-          {{toMethodName method}}{{toClassName ../type}}({{#ifEmpty body}}{{else}}{{toMethodName body.type}}: {{toClassName body.type}}Input! {{#ifNotEmpty ../parameters}}, {{/ifNotEmpty}}{{/ifEmpty}}{{#each parameters}}{{toMethodName name}}: {{translateGraphQL type}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}): {{#successResponseType responses ../../models}}{{toClassName name}}{{/successResponseType}}!
+          {{toMethodName method}}{{toClassName ../type}}({{#ifEmpty body}}{{else}}{{toMethodName body.type}}: {{toClassName body.type}}Input! {{#ifNotEmpty parameters}}, {{/ifNotEmpty}}{{/ifEmpty}}{{#each parameters}}{{toMethodName name}}: {{translateGraphQL type}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}): {{#successResponseType responses ../../models}}{{toClassName name}}{{/successResponseType}}!
 {{/ifNEq}}{{/each}}{{/each}}
         }
 
