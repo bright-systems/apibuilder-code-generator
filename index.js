@@ -161,6 +161,10 @@ Handlebars.registerHelper('ifEq', function(a, b, opts) {
   if (a === b) { return opts.fn(this) } else { return opts.inverse(this) }
 })
 
+Handlebars.registerHelper('ifNEq', function(a, b, opts) {
+  if (a !== b) { return opts.fn(this) } else { return opts.inverse(this) }
+})
+
 Handlebars.registerHelper('ifHasBody', function(parameters, opts) {
   if (hasBody(parameters)) { return opts.fn(this) } else { return opts.inverse(this) }
 })

@@ -1,0 +1,142 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: AppSync setup
+Parameters:
+  FunctionStack:
+    Description: The stack name that deploys the Lambda functions to invoke.
+    Type: String
+Resources:
+  DataSourceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+      Policies:
+        - PolicyName: LambdaInvoker
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Action: lambda:InvokeFunction
+                Effect: Allow
+                Resource:
+{{#each resources}}
+                  - Fn::Join:
+                    - ''
+                    - - 'arn:aws:lambda:'
+                      - !Ref AWS::Region
+                      - ':'
+                      - !Ref AWS::AccountId
+                      - ':function:'
+                      - Fn::ImportValue:
+                          !Sub '${FunctionStack}-functions-{{toClassName type}}'
+                  - Fn::Join:
+                    - ''
+                    - - 'arn:aws:lambda:'
+                      - !Ref AWS::Region
+                      - ':'
+                      - !Ref AWS::AccountId
+                      - ':function:'
+                      - Fn::ImportValue:
+                          !Sub '${FunctionStack}-functions-{{toClassName type}}'
+                      - ':*'
+{{/each}}
+      RoleName: !Sub '${AWS::StackName}-lambda-datasource'
+  GqlApi:
+    Type: AWS::AppSync::GraphQLApi
+    Properties:
+      AuthenticationType:  AWS_IAM
+      Name: !Ref AWS::StackName
+  GqlSchema:
+    Type: AWS::AppSync::GraphQLSchema
+    Properties:
+      ApiId: !GetAtt GqlApi.ApiId
+      Definition: |
+        type Mutation {
+{{#each resources}}{{#each operations}}{{#ifNEq method 'GET'}}
+          {{toLowerCase method}}{{toClassName ../type}}(id: String, firstName: String, lastName: String): {{toClassName ../type}}!
+{{/ifNEq}}{{/each}}{{/each}}
+        }
+
+        type Query {
+{{#each resources}}{{#each operations}}{{#ifNEq method 'GET'}}
+          {{toLowerCase method}}{{toClassName ../type}}(id: String): {{toClassName ../type}}
+{{/ifNEq}}{{/each}}{{/each}}
+        }
+
+{{#each models}}
+        type {{toClassName name}} {
+{{#each fields}}
+          {{toMethodName name}}: {{translateGraphQL type}}{{#if required}}! {{/if}}
+{{/each}}
+        }
+{{/each}}
+
+{{#each enums}}
+        enum {{toClassName name}} {
+{{#each values}}
+          {{toUpperCase name}}
+{{/each}}
+        }
+{{/each}}
+
+        schema {
+          query: Query
+          mutation: Mutation
+        }
+    DependsOn:
+      - GqlApi
+{{#each resources}}
+  {{toClassName type}}DataSource:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId: !GetAtt GqlApi.ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::Join:
+            - ''
+            - - 'arn:aws:lambda:'
+              - !Ref AWS::Region
+              - ':'
+              - !Ref AWS::AccountId
+              - ':function:'
+              - Fn::ImportValue:
+                  !Sub '${FunctionStack}-functions-{{toClassName type}}'
+      Name: lambda_main
+      ServiceRoleArn: !Ref DataSourceRole
+      Type: AWS_LAMBDA
+    DependsOn:
+      - DataSourceRole
+      - GqlApi
+{{#each operations}}
+  Get{{toClassName ../type}}Resolver:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt GqlApi.ApiId
+      FieldName: {{toLowerCase method}}{{toClassName ../type}}
+      TypeName: {{#ifEq method 'GET'}}Query{{else}}Mutation{{/ifEq}}
+      DataSourceName: !GetAtt {{toClassName ../type}}DataSource.Name
+      RequestMappingTemplate: |
+        #set( $unamepwd = "${context.identity.cognitoIdentityId}:" )
+        {
+          "version" : "2017-02-28",
+          "operation": "Invoke",
+          "payload": {
+            "source": "AppSync",
+            "httpMethod": "{{toLowerCase method}}",
+            "body": "$util.escapeJavaScript($util.toJson($context.args))",
+            "headers": {
+              "Authorization": "Basic $util.base64Encode($unamepwd)"
+            }
+          }
+        }
+      ResponseMappingTemplate: |
+        $context.result.body
+    DependsOn:
+      - GqlApi
+      - {{toClassName ../type}}DataSource
+{{/each}}
+{{/each}}
