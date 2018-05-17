@@ -135,8 +135,8 @@ Resources:
           "payload": {
             "source": "AppSync",
             "httpMethod": "{{toLowerCase method}}",
-            {{#ifNotEmpty body}}"body": "$util.escapeJavaScript($util.toJson($context.args.body))",
-            {{/ifNotEmpty}}"headers": {
+            {{#ifEmpty body}}{{else}}"body": "$util.escapeJavaScript($util.toJson($context.args.{{toMethodName body.type}}))",
+            {{/ifEmpty}}"headers": {
               "Authorization": "Basic $util.base64Encode($unamepwd)",
 {{#eachSelected parameters 'location' 'Header' ', '}}
               "{{toMethodName name}}": "$util.escapeJavaScript($context.args.{{toMethodName name}})"{{/eachSelected}}
