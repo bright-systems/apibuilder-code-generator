@@ -3,8 +3,8 @@ import { graphql, compose } from 'react-apollo'
 
 {{#each operations}}
 const {{toClassName method}}{{capitalize ../type}} = gql`
-{{#ifEq method 'GET'}}query{{else}}mutation{{/ifEq}} {{toClassName method}}{{capitalize ../type}}({{#allRequestFields . ../_root_.models ', '}}${{name}}: {{translateGraphQL type}}{{/allRequestFields}}) {
-  {{toMethodName method}}{{capitalize ../type}}({{#allRequestFields . ../_root_.models ', '}}{{name}}: ${{name}}{{/allRequestFields}}) {
+{{#ifEq method 'GET'}}query{{else}}mutation{{/ifEq}} {{toClassName method}}{{capitalize ../type}}({{#ifEmpty body}}{{else}}body: {{toClassName body.type}}Input! {{#ifNotEmpty ../parameters}}, {{/ifNotEmpty}}{{/ifEmpty}}{{#each parameters}}{{toMethodName name}}: {{translateGraphQL type}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}) {
+  {{toMethodName method}}{{capitalize ../type}}({{#ifNotEmpty body}}body: $body{{#ifNotEmpty ../parameters}}, {{/ifNotEmpty}}{{/ifNotEmpty}}{{#each parameters}}{{toMethodName name}}: ${{toMethodName name}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}) {
 {{#successResponseType responses ../_root_.models}}{{#each fields}}    {{name}}{{#ifNotLast ../fields @index}}
 {{/ifNotLast}}
 {{/each}}{{/successResponseType}}
@@ -18,7 +18,9 @@ const withAppSync{{capitalize type}} = compose(
     options: (ownProps) => ({
       fetchPolicy: 'cache-and-network',
       variables: {
-        id: ownProps.id
+{{#each parameters}}
+        {{toMethodName name}}: ownProps.{{toMethodName name}},
+{{/each}}
       }
     }),
     props: (props) => {
@@ -33,8 +35,15 @@ const withAppSync{{capitalize type}} = compose(
 {{#hasOperation operations 'put'}}
   graphql(Put{{capitalize ../type}}, {
     props: (props) => ({
-      onSave: {{toMethodName ../type}} => props.mutate({
-        variables: {{toMethodName ../type}},
+      onSave: ownProps => props.mutate({
+        variables: {
+{{#each parameters}}
+          {{toMethodName name}}: ownProps.{{toMethodName name}},
+{{/each}}
+{{#ifEmpty body}}{{else}}
+          {{toMethodName body.type}}: ownProps.{{toMethodName body.type}},
+{{/ifEmpty}}
+        },
         optimisticResponse: () => ({ put{{capitalize ../type}}: { ...{{toMethodName ../type}}, __typename: '{{toClassName ../type}}', version: 1 } })
       })
     })

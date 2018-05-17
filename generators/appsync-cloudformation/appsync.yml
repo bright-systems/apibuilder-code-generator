@@ -57,13 +57,13 @@ Resources:
       Definition: |
         type Mutation {
 {{#each resources}}{{#each operations}}{{#ifNEq method 'GET'}}
-          {{toLowerCase method}}{{toClassName ../type}}({{#ifNotEmpty body}}body: {{body.type}}Input! {{#ifNotEmpty parameters}},{{/ifNotEmpty}}{{/ifNotEmpty}}{{#each parameters}}{{toMethodName name}}: {{translateGraphQL type}}{{/each}}): {{toClassName ../type}}!
+          {{toMethodName method}}{{toClassName ../type}}({{#ifEmpty body}}{{else}}{{toMethodName body.type}}: {{toClassName body.type}}Input! {{#ifNotEmpty ../parameters}}, {{/ifNotEmpty}}{{/ifEmpty}}{{#each parameters}}{{toMethodName name}}: {{translateGraphQL type}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}): {{#successResponseType responses ../../models}}{{toClassName name}}{{/successResponseType}}!
 {{/ifNEq}}{{/each}}{{/each}}
         }
 
         type Query {
 {{#each resources}}{{#each operations}}{{#ifEq method 'GET'}}
-          {{toLowerCase method}}{{toClassName ../type}}({{#each parameters}}{{toMethodName name}}: {{translateGraphQL type}}{{/each}}): {{toClassName ../type}}
+          {{toMethodName method}}{{toClassName ../type}}({{#each parameters}}{{toMethodName name}}: {{translateGraphQL type}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}): {{#successResponseType responses ../../models}}{{toClassName name}}{{/successResponseType}}
 {{/ifEq}}{{/each}}{{/each}}
         }
 
@@ -135,9 +135,8 @@ Resources:
           "payload": {
             "source": "AppSync",
             "httpMethod": "{{toLowerCase method}}",
-{{#ifNotEmpty body}}
-            "body": "$util.escapeJavaScript($util.toJson($context.args.body))",{{/ifNotEmpty}}
-            "headers": {
+            {{#ifNotEmpty body}}"body": "$util.escapeJavaScript($util.toJson($context.args.body))",
+            {{/ifNotEmpty}}"headers": {
               "Authorization": "Basic $util.base64Encode($unamepwd)",
 {{#eachSelected parameters 'location' 'Header' ', '}}
               "{{toMethodName name}}": "$util.escapeJavaScript($context.args.{{toMethodName name}})"{{/eachSelected}}
