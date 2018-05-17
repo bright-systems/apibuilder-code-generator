@@ -128,6 +128,14 @@ function hasBody(parameters) {
   return getBodyIndex(parameters) >= 0
 }
 
+function ifEmpty(parameters, opts) {
+  if (
+    (Array.isArray(parameters) && parameters.length === 0) ||
+    (typeof parameters === 'object' && Object.keys(parameters).length === 0) ||
+    !parameters
+  ) { return opts.fn(this) } else { return opts.inverse(this) }
+}
+
 function toFile(config, filePath, contents) {
   var parsedPath = path.parse(filePath)
   return {
@@ -149,12 +157,11 @@ Handlebars.registerHelper('getRequestModel', function(parameters, modelName, met
   }
 })
 
-Handlebars.registerHelper('ifEmpty', function(parameters, opts) {
-  if (
-    (Array.isArray(parameters) && parameters.length === 0) ||
-    (typeof parameters === 'object' && Object.keys(parameters).length === 0) ||
-    !parameters
-  ) { return opts.fn(this) } else { return opts.inverse(this) }
+Handlebars.registerHelper('ifEmpty', ifEmpty)
+
+Handlebars.registerHelper('ifNotEmpty', function(parameters, opts) {
+  const inverseOpts = { fn: opts.inverse, inverse: opts.fn }
+  return ifEmpty(parameters, inverseOpts)
 })
 
 Handlebars.registerHelper('ifEq', function(a, b, opts) {

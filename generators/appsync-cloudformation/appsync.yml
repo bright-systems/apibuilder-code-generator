@@ -57,15 +57,23 @@ Resources:
       Definition: |
         type Mutation {
 {{#each resources}}{{#each operations}}{{#ifNEq method 'GET'}}
-          {{toLowerCase method}}{{toClassName ../type}}(id: String, firstName: String, lastName: String): {{toClassName ../type}}!
+          {{toLowerCase method}}{{toClassName ../type}}({{#ifNotEmpty body}}body: {{body.type}}Input! {{#ifNotEmpty parameters}},{{/ifNotEmpty}}{{/ifNotEmpty}}{{#each parameters}}{{toMethodName name}}: {{translateGraphQL type}}{{/each}}): {{toClassName ../type}}!
 {{/ifNEq}}{{/each}}{{/each}}
         }
 
         type Query {
-{{#each resources}}{{#each operations}}{{#ifNEq method 'GET'}}
-          {{toLowerCase method}}{{toClassName ../type}}(id: String): {{toClassName ../type}}
-{{/ifNEq}}{{/each}}{{/each}}
+{{#each resources}}{{#each operations}}{{#ifEq method 'GET'}}
+          {{toLowerCase method}}{{toClassName ../type}}({{#each parameters}}{{toMethodName name}}: {{translateGraphQL type}}{{/each}}): {{toClassName ../type}}
+{{/ifEq}}{{/each}}{{/each}}
         }
+
+{{#each models}}
+        input {{toClassName name}}Input {
+{{#each fields}}
+          {{toMethodName name}}: {{translateGraphQL type}}
+{{/each}}
+        }
+{{/each}}
 
 {{#each models}}
         type {{toClassName name}} {
@@ -105,14 +113,14 @@ Resources:
               - ':function:'
               - Fn::ImportValue:
                   !Sub '${FunctionStack}-functions-{{toClassName type}}'
-      Name: lambda_main
+      Name: {{toSnakeCase type}}_lambda
       ServiceRoleArn: !Ref DataSourceRole
       Type: AWS_LAMBDA
     DependsOn:
       - DataSourceRole
       - GqlApi
 {{#each operations}}
-  Get{{toClassName ../type}}Resolver:
+  {{toClassName method}}{{toClassName ../type}}Resolver:
     Type: AWS::AppSync::Resolver
     Properties:
       ApiId: !GetAtt GqlApi.ApiId
@@ -127,9 +135,20 @@ Resources:
           "payload": {
             "source": "AppSync",
             "httpMethod": "{{toLowerCase method}}",
-            "body": "$util.escapeJavaScript($util.toJson($context.args))",
+{{#ifNotEmpty body}}
+            "body": "$util.escapeJavaScript($util.toJson($context.args.body))",{{/ifNotEmpty}}
             "headers": {
-              "Authorization": "Basic $util.base64Encode($unamepwd)"
+              "Authorization": "Basic $util.base64Encode($unamepwd)",
+{{#eachSelected parameters 'location' 'Header' ', '}}
+              "{{toMethodName name}}": "$util.escapeJavaScript($context.args.{{toMethodName name}})"{{/eachSelected}}
+            },
+            "pathParameters": {
+{{#eachSelected parameters 'location' 'Path' ', '}}
+              "{{toMethodName name}}": "$util.escapeJavaScript($context.args.{{toMethodName name}})"{{/eachSelected}}
+            },
+            "queryStringParameters"{
+{{#eachSelected parameters 'location' 'Query' ', '}}
+              "{{toMethodName name}}": "$util.escapeJavaScript($context.args.{{toMethodName name}})"{{/eachSelected}}
             }
           }
         }
