@@ -9,7 +9,7 @@ Resources:
       CodeUri: ../../..
       Events:
 {{#each operations}}
-        {{toClassName method}}:
+        {{capitalize method}}:
           Type: Api
           Properties:
             Path: '{{pathToSwagger path}}'

@@ -57,13 +57,13 @@ Resources:
       Definition: |
         type Mutation {
 {{#each resources}}{{#each operations}}{{#ifNEq method 'GET'}}
-          {{toMethodName method}}{{toClassName ../type}}({{#ifEmpty body}}{{else}}{{toMethodName body.type}}: {{toClassName body.type}}Input! {{#ifNotEmpty parameters}}, {{/ifNotEmpty}}{{/ifEmpty}}{{#each parameters}}{{toMethodName name}}: {{translateGraphQL type}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}): {{#successResponseType responses ../../models}}{{toClassName name}}{{/successResponseType}}!
+          {{toLowerCase method}}{{toClassName ../type}}({{#ifEmpty body}}{{else}}{{toMethodName body.type}}: {{toClassName body.type}}Input! {{#ifNotEmpty parameters}}, {{/ifNotEmpty}}{{/ifEmpty}}{{#each parameters}}{{toMethodName name}}: {{translateGraphQL type}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}): {{#successResponseType responses ../../models}}{{toClassName name}}{{/successResponseType}}!
 {{/ifNEq}}{{/each}}{{/each}}
         }
 
         type Query {
 {{#each resources}}{{#each operations}}{{#ifEq method 'GET'}}
-          {{toMethodName method}}{{toClassName ../type}}({{#each parameters}}{{toMethodName name}}: {{translateGraphQL type}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}): {{#successResponseType responses ../../models}}{{toClassName name}}{{/successResponseType}}
+          {{toLowerCase method}}{{toClassName ../type}}({{#each parameters}}{{toMethodName name}}: {{translateGraphQL type}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}): {{#successResponseType responses ../../models}}{{toClassName name}}{{/successResponseType}}
 {{/ifEq}}{{/each}}{{/each}}
         }
 
@@ -114,13 +114,13 @@ Resources:
               - Fn::ImportValue:
                   !Sub '${FunctionStack}-functions-{{toClassName type}}'
       Name: {{toSnakeCase type}}_lambda
-      ServiceRoleArn: !Ref DataSourceRole
+      ServiceRoleArn: !GetAtt DataSourceRole.Arn
       Type: AWS_LAMBDA
     DependsOn:
       - DataSourceRole
       - GqlApi
 {{#each operations}}
-  {{toClassName method}}{{toClassName ../type}}Resolver:
+  {{capitalize method}}{{toClassName ../type}}Resolver:
     Type: AWS::AppSync::Resolver
     Properties:
       ApiId: !GetAtt GqlApi.ApiId
@@ -128,7 +128,7 @@ Resources:
       TypeName: {{#ifEq method 'GET'}}Query{{else}}Mutation{{/ifEq}}
       DataSourceName: !GetAtt {{toClassName ../type}}DataSource.Name
       RequestMappingTemplate: |
-        #set( $unamepwd = "${context.identity.cognitoIdentityId}:" )
+        #set( $unamepwd = "$util.urlEncode(${context.identity.cognitoIdentityId}):" )
         {
           "version" : "2017-02-28",
           "operation": "Invoke",
@@ -139,15 +139,15 @@ Resources:
             {{/ifEmpty}}"headers": {
               "Authorization": "Basic $util.base64Encode($unamepwd)",
 {{#eachSelected parameters 'location' 'Header' ', '}}
-              "{{toMethodName name}}": "$util.escapeJavaScript($context.args.{{toMethodName name}})"{{/eachSelected}}
+              "{{name}}": "$util.escapeJavaScript($context.args.{{toMethodName name}})"{{/eachSelected}}
             },
             "pathParameters": {
 {{#eachSelected parameters 'location' 'Path' ', '}}
-              "{{toMethodName name}}": "$util.escapeJavaScript($context.args.{{toMethodName name}})"{{/eachSelected}}
+              "{{name}}": "$util.escapeJavaScript($context.args.{{toMethodName name}})"{{/eachSelected}}
             },
-            "queryStringParameters"{
+            "queryStringParameters": {
 {{#eachSelected parameters 'location' 'Query' ', '}}
-              "{{toMethodName name}}": "$util.escapeJavaScript($context.args.{{toMethodName name}})"{{/eachSelected}}
+              "{{name}}": "$util.escapeJavaScript($context.args.{{toMethodName name}})"{{/eachSelected}}
             }
           }
         }
@@ -155,6 +155,7 @@ Resources:
         $context.result.body
     DependsOn:
       - GqlApi
+      - GqlSchema
       - {{toClassName ../type}}DataSource
 {{/each}}
 {{/each}}

@@ -31,6 +31,7 @@ describe('#toSnakeCase', function() {
 
 describe('#toMethodName', function() {
   it('should work', function() {
+    assert.equal(helper.toMethodName('myFunctionName'), 'myFunctionName')
     assert.equal(helper.toMethodName('My Function Name'), 'myFunctionName')
     assert.equal(helper.toMethodName('My_Functi^^ Name'), 'myFunctiName')
     assert.equal(helper.toMethodName('_My_Function_Name'), 'myFunctionName')

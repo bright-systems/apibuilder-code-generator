@@ -3,8 +3,8 @@ import { graphql, compose } from 'react-apollo'
 
 {{#each operations}}
 const {{toClassName method}}{{capitalize ../type}} = gql`
-{{#ifEq method 'GET'}}query{{else}}mutation{{/ifEq}} {{toClassName method}}{{capitalize ../type}}({{#ifEmpty body}}{{else}}body: {{toClassName body.type}}Input! {{#ifNotEmpty ../parameters}}, {{/ifNotEmpty}}{{/ifEmpty}}{{#each parameters}}{{toMethodName name}}: {{translateGraphQL type}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}) {
-  {{toMethodName method}}{{capitalize ../type}}({{#ifNotEmpty body}}body: $body{{#ifNotEmpty ../parameters}}, {{/ifNotEmpty}}{{/ifNotEmpty}}{{#each parameters}}{{toMethodName name}}: ${{toMethodName name}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}) {
+{{#ifEq method 'GET'}}query{{else}}mutation{{/ifEq}} {{toLowerCase method}}{{capitalize ../type}}({{#ifEmpty body}}{{else}}{{toMethodName body.type}}: {{toClassName body.type}}Input! {{#ifNotEmpty ../parameters}}, {{/ifNotEmpty}}{{/ifEmpty}}{{#each parameters}}{{toMethodName name}}: {{translateGraphQL type}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}) {
+  {{toLowerCase method}}{{capitalize ../type}}({{#ifNotEmpty body}}body: $body{{#ifNotEmpty ../parameters}}, {{/ifNotEmpty}}{{/ifNotEmpty}}{{#each parameters}}{{toMethodName name}}: ${{toMethodName name}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}) {
 {{#successResponseType responses ../_root_.models}}{{#each fields}}    {{name}}{{#ifNotLast ../fields @index}}
 {{/ifNotLast}}
 {{/each}}{{/successResponseType}}

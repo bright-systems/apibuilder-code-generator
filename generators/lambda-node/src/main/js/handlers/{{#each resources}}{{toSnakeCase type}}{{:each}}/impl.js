@@ -1,6 +1,6 @@
 {{#each operations}}
 {{!-- TODO: This will break for resources with multiple operations with the same method. --}}
-exports.{{toMethodName method}} = async (event, context) => {
+exports.{{toLowerCase method}} = async (event, context) => {
   return { statusCode: 501, body: JSON.stringify({ code: 501, message: 'Not implemented' }) }
 }
 {{#ifNotLast ../operations @index}}

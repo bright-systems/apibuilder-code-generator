@@ -3,9 +3,9 @@ const impl = require('../../../../main/js/handlers/{{toSnakeCase type}}/impl')
 
 describe('{{toSnakeCase type}}.impl', () => {
 {{#each operations}}
-  describe('{{toMethodName method}}', () => {
+  describe('{{toLowerCase method}}', () => {
     it('should work', () => {
-      return impl.{{toMethodName method}}(
+      return impl.{{toLowerCase method}}(
         { },
         { }
       )
