@@ -6,7 +6,7 @@ create table {{toTableName plural}} (
 
 {{#each fields}}
 {{#ifEmpty description}}
-{{else}}comment on column {{toTableName ../plural}}.{{name}} is '
+{{else}}comment on column {{toTableName ../plural}}.{{toSnakeCase name}} is '
   {{description}}
 ';
 {{/ifEmpty}}
