@@ -16,8 +16,10 @@ phases:
           --s3-bucket {{#ifAttributeExists attributes 'buildspec-config'}}{{value.buildBucket}}{{else}}{your-bucket-here}{{/ifAttributeExists}}
           --s3-prefix {{application.key}}
           --output-template-file sam-packaged.yml
+      - echo "{\"Env\":\"$ENV\"}}" > sam-packaged-config.json
 artifacts:
   files:
     - ./src/main/resources/sam.yml
     - sam-packaged.yml
+    - sam-packaged-config.json
   discard-paths: yes

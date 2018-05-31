@@ -1,12 +1,20 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
 Description: '{{name}} deployment'
+Parameters:
+  Env:
+    Description: The environment name.
+    Type: String
+    Default: dev
 Resources:
 {{#each resources}}
   {{toClassName type}}Function:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ../../..
+      Environment:
+        Variables:
+          ENV: !Ref Env
       Events:
 {{#each operations}}
         {{capitalize method}}:
