@@ -1,11 +1,19 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
 Description: 'ApiBuilder code generator deployment'
+Parameters:
+  Env:
+    Description: The environment name.
+    Type: String
+    Default: dev
 Resources:
   GeneratorsFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ../
+      Environment:
+        Variables:
+          ENV: !Ref Env
       Events:
         Get:
           Type: Api
@@ -24,6 +32,9 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ../
+      Environment:
+        Variables:
+          ENV: !Ref Env
       Events:
         Get:
           Type: Api
@@ -37,6 +48,9 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ../
+      Environment:
+        Variables:
+          ENV: !Ref Env
       Events:
         Get:
           Type: Api

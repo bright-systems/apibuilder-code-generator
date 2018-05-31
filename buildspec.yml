@@ -12,8 +12,10 @@ phases:
           --s3-bucket com.getbright.packages
           --s3-prefix apibuilder-code-generator
           --output-template-file sam-packaged.yml
+      - echo "{\"Parameters\":{\"Env\":\"$ENV\"}}" > sam-packaged-config.json
 artifacts:
   type: zip
   files:
     - ./resources/sam.yml
     - sam-packaged.yml
+    - sam-packaged-config.json
