@@ -159,3 +159,7 @@ Resources:
       - {{toClassName ../type}}DataSource
 {{/each}}
 {{/each}}
+Outputs:
+  ApiEndpoint:
+    Description: The endpoint for the AppSync API.
+    Value: !GetAtt GqlApi.GraphQLUrl
