@@ -57,20 +57,23 @@ Resources:
       Definition: |
         type Mutation {
 {{#each resources}}{{#each operations}}{{#ifNEq method 'GET'}}
-          {{toLowerCase method}}{{toClassName ../type}}({{#ifEmpty body}}{{else}}{{toMethodName body.type}}: {{toClassName body.type}}Input! {{#ifNotEmpty parameters}}, {{/ifNotEmpty}}{{/ifEmpty}}{{#each parameters}}{{toMethodName name}}: {{translateGraphQL type}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}): {{#successResponseType responses ../../models}}{{toClassName name}}{{/successResponseType}}!
+          {{toLowerCase method}}{{toClassName ../type}}({{#ifEmpty body}}{{else}}{{toMethodName body.type}}: {{toClassName body.type}}Input! {{#ifNotEmpty parameters}}, {{/ifNotEmpty}}{{/ifEmpty}}{{#each parameters}}{{toMethodName name}}: {{translateGraphQL type ../../enums}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}): {{#successResponseType responses ../../models}}{{toClassName name}}{{/successResponseType}}!
 {{/ifNEq}}{{/each}}{{/each}}
         }
 
         type Query {
 {{#each resources}}{{#each operations}}{{#ifEq method 'GET'}}
-          {{toLowerCase method}}{{toClassName ../type}}({{#each parameters}}{{toMethodName name}}: {{translateGraphQL type}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}): {{#successResponseType responses ../../models}}{{toClassName name}}{{/successResponseType}}
+          {{toLowerCase method}}{{toClassName ../type}}({{#each parameters}}{{toMethodName name}}: {{translateGraphQL type ../../enums}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}): {{#successResponseType responses ../../models}}{{toClassName name}}{{/successResponseType}}
 {{/ifEq}}{{/each}}{{/each}}
         }
+
+        scalar Date
+        scalar DateTime
 
 {{#each models}}
         input {{toClassName name}}Input {
 {{#each fields}}
-          {{toMethodName name}}: {{translateGraphQL type}}
+          {{toMethodName name}}: {{translateGraphQL type ../../enums}}
 {{/each}}
         }
 {{/each}}
@@ -78,7 +81,7 @@ Resources:
 {{#each models}}
         type {{toClassName name}} {
 {{#each fields}}
-          {{toMethodName name}}: {{translateGraphQL type}}{{#if required}}! {{/if}}
+          {{toMethodName name}}: {{translateGraphQL type ../../enums}}{{#if required}}! {{/if}}
 {{/each}}
         }
 {{/each}}
