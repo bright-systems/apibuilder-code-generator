@@ -84,4 +84,21 @@ describe('#translateGraphQL', function() {
       }
     ]), '[MyObject]')
   })
+
+  it('should work for input models', function() {
+    assert.equal(helper.translateGraphQL('MyObject', [], [
+      {
+        'name': 'MyObject',
+        'plural': 'MyObjects',
+        'fields': [
+          {
+            'name': 'id',
+            'type': 'integer',
+            'required': true,
+            'description': 'Unique identifier.'
+          }
+        ]
+      }
+    ], true), 'MyObjectInput')
+  })
 })

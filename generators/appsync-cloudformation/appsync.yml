@@ -73,7 +73,7 @@ Resources:
 {{#each models}}
         input {{toClassName name}}Input {
 {{#each fields}}
-          {{toMethodName name}}: {{translateGraphQL type ../../enums ../../models}}
+          {{toMethodName name}}: {{translateGraphQL type ../../enums ../../models true}}
 {{/each}}
         }
 {{/each}}
