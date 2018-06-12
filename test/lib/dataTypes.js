@@ -101,4 +101,21 @@ describe('#translateGraphQL', function() {
       }
     ], true), 'MyObjectInput')
   })
+
+  it('should work for arrays of input models', function() {
+    assert.equal(helper.translateGraphQL('[MyObject]', [], [
+      {
+        'name': 'MyObject',
+        'plural': 'MyObjects',
+        'fields': [
+          {
+            'name': 'id',
+            'type': 'integer',
+            'required': true,
+            'description': 'Unique identifier.'
+          }
+        ]
+      }
+    ], true), '[MyObjectInput]')
+  })
 })
