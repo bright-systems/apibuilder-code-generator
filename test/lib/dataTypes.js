@@ -12,8 +12,8 @@ describe('#translateGraphQL', function() {
   })
 
   it('should work for custom types', function() {
-    assert.equal(helper.translateGraphQL('date-iso8601'), 'Date')
-    assert.equal(helper.translateGraphQL('date-time-iso8601'), 'DateTime')
+    assert.equal(helper.translateGraphQL('date-iso8601'), 'String')
+    assert.equal(helper.translateGraphQL('date-time-iso8601'), 'String')
   })
 
   it('should work for arrays of basic datatypes', function() {

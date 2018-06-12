@@ -3,7 +3,7 @@ import { graphql, compose } from 'react-apollo'
 
 {{#each operations}}
 const {{capitalize method}}{{capitalize ../type}} = gql`
-{{#ifEq method 'GET'}}query{{else}}mutation{{/ifEq}} {{capitalize method}}{{capitalize ../type}}({{#ifEmpty body}}{{else}}${{toMethodName body.type}}: {{toClassName body.type}}Input! {{#ifNotEmpty parameters}}, {{/ifNotEmpty}}{{/ifEmpty}}{{#each parameters}}${{toMethodName name}}: {{translateGraphQL type ../../_root_.enums ../../_root_.models}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}) {
+{{#ifEq method 'GET'}}query{{else}}mutation{{/ifEq}} {{capitalize method}}{{capitalize ../type}}({{#ifEmpty body}}{{else}}${{toMethodName body.type}}: {{toClassName body.type}}Input! {{#ifNotEmpty parameters}}, {{/ifNotEmpty}}{{/ifEmpty}}{{#each parameters}}${{toMethodName name}}: {{translateGraphQL type ../../_root_.enums ../../_root_.models false}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}) {
   {{toLowerCase method}}{{capitalize ../type}}({{#ifEmpty body}}{{else}}{{toMethodName body.type}}: ${{toMethodName body.type}}{{#ifNotEmpty parameters}}, {{/ifNotEmpty}}{{/ifEmpty}}{{#each parameters}}{{toMethodName name}}: ${{toMethodName name}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}) {
 {{#successResponseType responses ../_root_.models}}{{#each fields}}    {{name}}{{#ifNotLast ../fields @index}}
 {{/ifNotLast}}
