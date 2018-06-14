@@ -60,6 +60,7 @@ Resources:
       FunctionName: !Sub '${AWS::StackName}-invocations'
       Handler: index.invocationsHandler
       Runtime: nodejs6.10
+      Timeout: 20
   GeneratorsFunctionLogRetention:
     Type: AWS::Logs::LogGroup
     Properties:
