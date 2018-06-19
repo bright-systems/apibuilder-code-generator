@@ -9,7 +9,7 @@ const withApollo = (Comp, getClientFunc) => {
       return (
         <ApolloProvider client={client}>
           <Rehydrated>
-            <Comp />
+            <Comp {...this.props} />
           </Rehydrated>
         </ApolloProvider>
       )

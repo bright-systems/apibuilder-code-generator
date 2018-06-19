@@ -14,7 +14,8 @@ class Client {
       auth: {
         type: AUTH_TYPE.AWS_IAM,
         credentials: () => Auth.currentCredentials()
-      }
+      },
+      disableOffline: true
     })
   }
 }
