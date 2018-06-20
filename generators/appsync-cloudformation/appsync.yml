@@ -63,7 +63,7 @@ Resources:
 
         type Query {
 {{#each resources}}{{#each operations}}{{#ifEq method 'GET'}}
-          {{toLowerCase method}}{{toClassName ../type}}({{#each parameters}}{{toMethodName name}}: {{translateGraphQL type ../../enums ../../models false}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}): {{#successResponseType responses ../../models}}{{toClassName name}}{{/successResponseType}}
+          {{toLowerCase method}}{{toClassName ../type}}({{#each parameters}}{{toMethodName name}}: {{translateGraphQL type ../../../enums ../../../models false}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}): {{#successResponseType responses ../../models}}{{toClassName name}}{{/successResponseType}}
 {{/ifEq}}{{/each}}{{/each}}
         }
 
