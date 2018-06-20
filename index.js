@@ -12,6 +12,9 @@ const url = require('url')
 const configFilename = '.config'
 const generatorsRootDir = path.join(__dirname, 'generators')
 
+require('handlebars-helpers')({
+  handlebars: Handlebars
+})
 registerAll([apiBuilderHelpers, arrayHelpers, dataTypes, nameHelpers, postgresHelpers, stringHelpers])
 
 exports.generatorsHandler = function(event, context, callback) {

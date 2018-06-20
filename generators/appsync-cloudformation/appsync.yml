@@ -23,7 +23,7 @@ Resources:
               - Action: lambda:InvokeFunction
                 Effect: Allow
                 Resource:
-{{#each resources}}
+{{#each (sortBy resources 'type')}}
                   - Fn::Join:
                     - ''
                     - - 'arn:aws:lambda:'
@@ -56,36 +56,33 @@ Resources:
       ApiId: !GetAtt GqlApi.ApiId
       Definition: |
         type Mutation {
-{{#each resources}}{{#each operations}}{{#ifNEq method 'GET'}}
+{{#each (sortBy resources 'type')}}{{#each (sortBy operations 'method')}}{{#ifNEq method 'GET'}}
           {{toLowerCase method}}{{toClassName ../type}}({{#ifEmpty body}}{{else}}{{toMethodName body.type}}: {{toClassName body.type}}Input! {{#ifNotEmpty parameters}}, {{/ifNotEmpty}}{{/ifEmpty}}{{#each parameters}}{{toMethodName name}}: {{translateGraphQL type ../../enums ../../models false}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}): {{#successResponseType responses ../../models}}{{toClassName name}}{{/successResponseType}}!
 {{/ifNEq}}{{/each}}{{/each}}
         }
 
         type Query {
-{{#each resources}}{{#each operations}}{{#ifEq method 'GET'}}
+{{#each (sortBy resources 'type')}}{{#each (sortBy operations 'method')}}{{#ifEq method 'GET'}}
           {{toLowerCase method}}{{toClassName ../type}}({{#each parameters}}{{toMethodName name}}: {{translateGraphQL type ../../../enums ../../../models false}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}): {{#successResponseType responses ../../models}}{{toClassName name}}{{/successResponseType}}
 {{/ifEq}}{{/each}}{{/each}}
         }
 
-{{#each models}}
+{{#each (sortBy models 'name')}}
         input {{toClassName name}}Input {
-{{#each fields}}
+{{#each (sortBy fields 'name')}}
           {{toMethodName name}}: {{translateGraphQL type ../../enums ../../models true}}
 {{/each}}
         }
-{{/each}}
-
-{{#each models}}
         type {{toClassName name}} {
-{{#each fields}}
+{{#each (sortBy fields 'name')}}
           {{toMethodName name}}: {{translateGraphQL type ../../enums ../../models false}}{{#if required}}! {{/if}}
 {{/each}}
         }
 {{/each}}
 
-{{#each enums}}
+{{#each (sortBy enums 'name')}}
         enum {{toClassName name}} {
-{{#each values}}
+{{#each (sortBy values 'name')}}
           {{toUpperCase name}}
 {{/each}}
         }
@@ -97,7 +94,7 @@ Resources:
         }
     DependsOn:
       - GqlApi
-{{#each resources}}
+{{#each (sortBy resources 'type')}}
   {{toClassName type}}DataSource:
     Type: AWS::AppSync::DataSource
     Properties:
@@ -119,7 +116,7 @@ Resources:
     DependsOn:
       - DataSourceRole
       - GqlApi
-{{#each operations}}
+{{#each (sortBy operations 'method')}}
   {{capitalize method}}{{toClassName ../type}}Resolver:
     Type: AWS::AppSync::Resolver
     Properties:
@@ -137,16 +134,18 @@ Resources:
             "httpMethod": "{{toLowerCase method}}",
             {{#ifEmpty body}}{{else}}"body": "$util.escapeJavaScript($util.toJson($context.args.{{toMethodName body.type}}))",
             {{/ifEmpty}}"headers": {
-              "Authorization": "Basic $util.base64Encode($unamepwd)",
-{{#eachSelected parameters 'location' 'Header' ', '}}
+              "Authorization": "Basic $util.base64Encode($unamepwd)",{{#eachSelected (sortBy parameters 'name') 'location' 'Header' ',
+              '}}
               "{{name}}": "$util.escapeJavaScript($context.args.{{toMethodName name}})"{{/eachSelected}}
             },
             "pathParameters": {
-{{#eachSelected parameters 'location' 'Path' ', '}}
+{{#eachSelected (sortBy parameters 'name') 'location' 'Path' ',
+'}}
               "{{name}}": "$util.escapeJavaScript($context.args.{{toMethodName name}})"{{/eachSelected}}
             },
             "queryStringParameters": {
-{{#eachSelected parameters 'location' 'Query' ', '}}
+{{#eachSelected (sortBy parameters 'name') 'location' 'Query' ',
+'}}
               "{{name}}": "$util.escapeJavaScript($context.args.{{toMethodName name}})"{{/eachSelected}}
             }
           }
