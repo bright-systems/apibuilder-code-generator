@@ -2,9 +2,9 @@ import gql from 'graphql-tag'
 import { graphql, compose } from 'react-apollo'
 
 {{#each operations}}
-const {{capitalize method}}{{capitalize ../type}} = gql`
-{{#ifEq method 'GET'}}query{{else}}mutation{{/ifEq}} {{capitalize method}}{{capitalize ../type}}({{#ifEmpty body}}{{else}}${{toMethodName body.type}}: {{toClassName body.type}}Input! {{#ifNotEmpty parameters}}, {{/ifNotEmpty}}{{/ifEmpty}}{{#each parameters}}${{toMethodName name}}: {{translateGraphQL type ../../_root_.enums ../../_root_.models false}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}) {
-  {{toLowerCase method}}{{capitalize ../type}}({{#ifEmpty body}}{{else}}{{toMethodName body.type}}: ${{toMethodName body.type}}{{#ifNotEmpty parameters}}, {{/ifNotEmpty}}{{/ifEmpty}}{{#each parameters}}{{toMethodName name}}: ${{toMethodName name}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}) {
+const {{capitalize method}}{{toClassName ../type}} = gql`
+{{#ifEq method 'GET'}}query{{else}}mutation{{/ifEq}} {{capitalize method}}{{toClassName ../type}}({{#ifEmpty body}}{{else}}${{toMethodName body.type}}: {{toClassName body.type}}Input! {{#ifNotEmpty parameters}}, {{/ifNotEmpty}}{{/ifEmpty}}{{#each parameters}}${{toMethodName name}}: {{translateGraphQL type ../../_root_.enums ../../_root_.models false}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}) {
+  {{toLowerCase method}}{{toClassName ../type}}({{#ifEmpty body}}{{else}}{{toMethodName body.type}}: ${{toMethodName body.type}}{{#ifNotEmpty parameters}}, {{/ifNotEmpty}}{{/ifEmpty}}{{#each parameters}}{{toMethodName name}}: ${{toMethodName name}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}) {
 {{#successResponseType responses ../_root_.models}}{{#each fields}}    {{name}}{{#ifNotLast ../fields @index}}
 {{/ifNotLast}}
 {{/each}}{{/successResponseType}}
@@ -12,9 +12,9 @@ const {{capitalize method}}{{capitalize ../type}} = gql`
 }`
 
 {{/each}}
-const withAppSync{{capitalize type}} = compose(
+const withAppSync{{toClassName type}} = compose(
 {{#hasOperation operations 'get'}}
-  graphql(Get{{capitalize ../type}}, {
+  graphql(Get{{toClassName ../type}}, {
     options: (ownProps) => ({
       fetchPolicy: 'cache-and-network',
       variables: {
@@ -28,13 +28,13 @@ const withAppSync{{capitalize type}} = compose(
         if (props.data.error) console.log(props.data.error)
         return {}
       } else {
-        return props.data.get{{capitalize ../type}} || {}
+        return props.data.get{{toClassName ../type}} || {}
       }
     }
   }){{#hasOperation ../operations 'put'}},{{/hasOperation}}
 {{/hasOperation}}
 {{#hasOperation operations 'put'}}
-  graphql(Put{{capitalize ../type}}, {
+  graphql(Put{{toClassName ../type}}, {
     props: (props) => ({
       onSave: ownProps => props.mutate({
         variables: {
@@ -45,11 +45,11 @@ const withAppSync{{capitalize type}} = compose(
           {{toMethodName name}}: ownProps.{{toMethodName name}}{{#ifNotLast ../parameters @index}},{{/ifNotLast}}
 {{/each}}
         },
-        optimisticResponse: () => ({ put{{capitalize ../type}}: { ...ownProps.{{toMethodName ../type}}, __typename: '{{toClassName ../type}}', version: 1 } })
+        optimisticResponse: () => ({ put{{toClassName ../type}}: { ...ownProps.{{toMethodName ../type}}, __typename: '{{toClassName ../type}}', version: 1 } })
       })
     })
   })
 {{/hasOperation}}
 )
 
-export { {{#each operations}}{{capitalize method}}{{capitalize ../type}}, {{/each}}withAppSync{{capitalize type}} }
+export { {{#each operations}}{{capitalize method}}{{toClassName ../type}}, {{/each}}withAppSync{{toClassName type}} }
