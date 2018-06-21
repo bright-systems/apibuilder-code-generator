@@ -7,7 +7,7 @@ Parameters:
     Type: String
     Default: dev
 Resources:
-{{#each resources}}
+{{#each (sortBy resources 'type')}}
   {{toClassName type}}Function:
     Type: AWS::Serverless::Function
     Properties:
@@ -16,7 +16,7 @@ Resources:
         Variables:
           ENV: !Ref Env
       Events:
-{{#each operations}}
+{{#each (sortBy operations 'method')}}
         {{capitalize method}}:
           Type: Api
           Properties:
@@ -45,7 +45,7 @@ Resources:
       RetentionInDays: 7
 {{/each}}
 Outputs:
-{{#each resources}}
+{{#each (sortBy resources 'type')}}
   {{toClassName type}}Function:
     Description: The name of the Lambda function for the {{toClassName type}} model
     Value: !Ref {{toClassName type}}Function
