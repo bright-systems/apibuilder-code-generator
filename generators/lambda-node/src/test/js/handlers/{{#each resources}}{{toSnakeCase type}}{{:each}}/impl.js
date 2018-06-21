@@ -9,9 +9,9 @@ describe('{{toSnakeCase type}}.impl', () => {
         { },
         { }
       )
-      .then(data => {
-        assert(data.statusCode >= 200 && data.statusCode <= 299)
-      })
+        .then(data => {
+          assert(data.statusCode >= 200 && data.statusCode <= 299)
+        })
     })
   })
 {{#ifNotLast ../operations @index}}
