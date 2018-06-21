@@ -1,6 +1,7 @@
 const impl = require('./impl')
 
 exports.handler = (event, context) => {
+  console.log('event: ' + JSON.stringify(event))
   switch (event.httpMethod.toLowerCase()) {
 {{#each operations}}
     case '{{toLowerCase method}}':
