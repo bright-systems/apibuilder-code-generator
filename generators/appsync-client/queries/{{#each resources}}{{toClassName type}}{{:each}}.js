@@ -15,6 +15,7 @@ const {{capitalize method}}{{toClassName ../type}} = gql`
 const withAppSync{{toClassName type}} = compose(
 {{#hasOperation operations 'get'}}
   graphql(Get{{toClassName ../type}}, {
+    name: 'get{{toClassName ../type}}',
     options: (ownProps) => ({
       fetchPolicy: 'cache-and-network',
       variables: {
