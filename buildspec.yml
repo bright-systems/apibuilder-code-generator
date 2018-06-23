@@ -7,6 +7,7 @@ phases:
       - echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
       - sudo apt-get update -y && sudo apt-get install -y yarn
       - yarn install --prod
+      - find ./node_modules -mtime +10950 -exec touch {} \;
       - aws cloudformation package
           --template-file ./resources/sam.yml
           --s3-bucket com.getbright.packages
