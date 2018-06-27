@@ -11,10 +11,10 @@ describe('{{toSnakeCase type}}.handler', () => {
       },
       {}
     )
-    .then(data => {
-      {{!-- TODO: Assert for correct 2XX statusCode --}}
-      assert(data.statusCode >= 200 && data.statusCode <= 299)
-    })
+      .then(data => {
+        {{!-- TODO: Assert for correct 2XX statusCode --}}
+        assert(data.statusCode >= 200 && data.statusCode <= 299)
+      })
   })
 {{#ifNotLast ../operations @index}}
 
