@@ -1,14 +1,14 @@
+{{#*inline "responseParams"}} {
+{{#each fields}}  {{repeat '  ' ../depth}}{{name}}{{#isModel . ../models}}{{> responseParams depth=(plus ../../depth 1) models=../../models}}{{/isModel}}
+{{/each}}
+{{repeat '  ' (plus ./depth -1)}}  }{{/inline}}
 import gql from 'graphql-tag'
 import { graphql, compose } from 'react-apollo'
 
 {{#each operations}}
 const {{capitalize method}}{{toClassName ../type}} = gql`
 {{#ifEq method 'GET'}}query{{else}}mutation{{/ifEq}} {{capitalize method}}{{toClassName ../type}}({{#ifEmpty body}}{{else}}${{toMethodName body.type}}: {{toClassName body.type}}Input! {{#ifNotEmpty parameters}}, {{/ifNotEmpty}}{{/ifEmpty}}{{#each parameters}}${{toMethodName name}}: {{translateGraphQL type ../../_root_.enums ../../_root_.models false}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}) {
-  {{toLowerCase method}}{{toClassName ../type}}({{#ifEmpty body}}{{else}}{{toMethodName body.type}}: ${{toMethodName body.type}}{{#ifNotEmpty parameters}}, {{/ifNotEmpty}}{{/ifEmpty}}{{#each parameters}}{{toMethodName name}}: ${{toMethodName name}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}) {
-{{#successResponseType responses ../_root_.models}}{{#each fields}}    {{name}}{{#ifNotLast ../fields @index}}
-{{/ifNotLast}}
-{{/each}}{{/successResponseType}}
-  }
+  {{toLowerCase method}}{{toClassName ../type}}({{#ifEmpty body}}{{else}}{{toMethodName body.type}}: ${{toMethodName body.type}}{{#ifNotEmpty parameters}}, {{/ifNotEmpty}}{{/ifEmpty}}{{#each parameters}}{{toMethodName name}}: ${{toMethodName name}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}){{#successResponseType responses ../_root_.models}}{{> responseParams depth=1 models=../../_root_.models}}{{/successResponseType}}
 }`
 
 {{/each}}

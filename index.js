@@ -149,6 +149,10 @@ function toFile(config, filePath, contents) {
   }
 }
 
+Handlebars.registerHelper('plus', function(x, y) {
+  return x + y
+})
+
 Handlebars.registerHelper('getRequestModel', function(parameters, modelName, method) {
   const bodyIndex = getBodyIndex(parameters)
   if (bodyIndex >= 0 && parameters.length === 1) {
