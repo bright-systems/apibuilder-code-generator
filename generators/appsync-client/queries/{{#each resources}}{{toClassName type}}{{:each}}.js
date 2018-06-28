@@ -37,7 +37,7 @@ const withAppSync{{toClassName type}} = compose(
 {{#hasOperation operations 'put'}}
   graphql(Put{{toClassName ../type}}, {
     props: (props) => ({
-      onSave: ownProps => props.mutate({
+      put{{toClassName ../type}}: ownProps => props.mutate({
         variables: {
 {{#ifEmpty body}}{{else}}
           {{toMethodName body.type}}: ownProps.{{toMethodName body.type}}{{#ifNotEmpty parameters}},{{/ifNotEmpty}}
@@ -47,6 +47,23 @@ const withAppSync{{toClassName type}} = compose(
 {{/each}}
         },
         optimisticResponse: () => ({ put{{toClassName ../type}}: { ...ownProps.{{toMethodName ../type}}, __typename: '{{toClassName ../type}}', version: 1 } })
+      })
+    })
+  })
+{{/hasOperation}}
+{{#hasOperation operations 'delete'}}
+  graphql(Delete{{toClassName ../type}}, {
+    props: (props) => ({
+      delete{{toClassName ../type}}: ownProps => props.mutate({
+        variables: {
+{{#ifEmpty body}}{{else}}
+          {{toMethodName body.type}}: ownProps.{{toMethodName body.type}}{{#ifNotEmpty parameters}},{{/ifNotEmpty}}
+{{/ifEmpty}}
+{{#each parameters}}
+          {{toMethodName name}}: ownProps.{{toMethodName name}}{{#ifNotLast ../parameters @index}},{{/ifNotLast}}
+{{/each}}
+        },
+        optimisticResponse: () => ({ delete{{toClassName ../type}}: { ...ownProps, __typename: '{{toClassName ../type}}', version: 1 } })
       })
     })
   })
