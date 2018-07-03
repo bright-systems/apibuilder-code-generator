@@ -49,7 +49,7 @@ const withAppSync{{toClassName type}} = compose(
         optimisticResponse: () => ({ put{{toClassName ../type}}: { ...ownProps.{{toMethodName ../type}}, __typename: '{{toClassName ../type}}', version: 1 } })
       })
     })
-  })
+  }){{#hasOperation ../operations 'delete'}},{{/hasOperation}}
 {{/hasOperation}}
 {{#hasOperation operations 'delete'}}
   graphql(Delete{{toClassName ../type}}, {
