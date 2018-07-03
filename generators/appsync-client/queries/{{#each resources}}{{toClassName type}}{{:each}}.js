@@ -25,12 +25,8 @@ const withAppSync{{toClassName type}} = compose(
       }
     }),
     props: (props) => {
-      if (props.data.loading || props.data.error) {
-        if (props.data.error) console.log(props.data.error)
-        return {}
-      } else {
-        return props.data.get{{toClassName ../type}} || {}
-      }
+      if (props.get{{toClassName ../type}}.error) console.log(props.get{{toClassName ../type}}.error)
+      return props
     }
   }){{#hasOperation ../operations 'put'}},{{/hasOperation}}
 {{/hasOperation}}
