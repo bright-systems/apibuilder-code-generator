@@ -5,7 +5,7 @@ create table {{toTableName plural}} (
 );
 {{#ifEmpty description}}
 {{else}}
-comment on table {{toTableName ../plural}} is '
+comment on table {{toTableName plural}} is '
   {{description}}
 ';
 {{/ifEmpty}}
