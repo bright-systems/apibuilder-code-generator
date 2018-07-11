@@ -23,6 +23,11 @@ Resources:
             Path: '{{pathToSwagger path}}'
             Method: {{toLowerCase method}}
 {{/each}}
+        PING:
+          Type: Schedule
+          Properties:
+            Schedule: rate(5 minutes)
+            Input: '{"httpMethod": "PING"}'
       FunctionName: !Sub '${AWS::StackName}-{{toSnakeCase type '-'}}'
       Handler: src/main/js/handlers/{{toSnakeCase type}}.handler
       Policies:
