@@ -23,7 +23,7 @@ Resources:
             Path: '{{pathToSwagger path}}'
             Method: {{toLowerCase method}}
 {{/each}}
-        PING:
+        Ping:
           Type: Schedule
           Properties:
             Schedule: rate(5 minutes)
