@@ -151,7 +151,11 @@ Resources:
           }
         }
       ResponseMappingTemplate: |
-        $context.result.body
+        #if($context.result.statusCode >= 200 && $context.result.statusCode <= 299)
+          $context.result.body
+        #else
+          $utils.error($util.parseJson($context.result.body).message, $context.result.statusCode.toString(), $util.parseJson($context.result.body))
+        #end
     DependsOn:
       - GqlApi
       - GqlSchema
