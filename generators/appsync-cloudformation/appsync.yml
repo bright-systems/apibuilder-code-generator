@@ -57,13 +57,13 @@ Resources:
       Definition: |
         type Mutation {
 {{#each (sortBy resources 'type')}}{{#each (sortBy operations 'method')}}{{#ifNEq method 'GET'}}
-          {{toLowerCase method}}{{toClassName ../type}}({{#ifEmpty body}}{{else}}{{toMethodName body.type}}: {{toClassName body.type}}Input! {{#ifNotEmpty parameters}}, {{/ifNotEmpty}}{{/ifEmpty}}{{#each parameters}}{{toMethodName name}}: {{translateGraphQL type ../../enums ../../models false}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}): {{#successResponseType responses ../../models}}{{toClassName name}}{{/successResponseType}}!
+          {{toLowerCase method}}{{toClassName ../type}}({{#ifEmpty body}}{{else}}{{toMethodName body.type}}: {{toClassName body.type}}Input! {{#ifNotEmpty parameters}}, {{/ifNotEmpty}}{{/ifEmpty}}{{#each parameters}}{{toMethodName name}}: {{translateGraphQL type ../../enums ../../models false}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}{{#ifEmpty parameters}}{{else}}, {{/ifEmpty}}cognitoIdentityId__: String): {{#successResponseType responses ../../models}}{{toClassName name}}{{/successResponseType}}!
 {{/ifNEq}}{{/each}}{{/each}}
         }
 
         type Query {
 {{#each (sortBy resources 'type')}}{{#each (sortBy operations 'method')}}{{#ifEq method 'GET'}}
-          {{toLowerCase method}}{{toClassName ../type}}({{#each parameters}}{{toMethodName name}}: {{translateGraphQL type ../../../enums ../../../models false}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}): {{#successResponseType responses ../../models}}{{toClassName name}}{{/successResponseType}}
+          {{toLowerCase method}}{{toClassName ../type}}({{#each parameters}}{{toMethodName name}}: {{translateGraphQL type ../../../enums ../../../models false}}{{#ifNotLast ../parameters @index}}, {{/ifNotLast}}{{/each}}{{#ifEmpty parameters}}{{else}}, {{/ifEmpty}}cognitoIdentityId__: String): {{#successResponseType responses ../../models}}{{toClassName name}}{{/successResponseType}}
 {{/ifEq}}{{/each}}{{/each}}
         }
 
@@ -125,7 +125,11 @@ Resources:
       TypeName: {{#ifEq method 'GET'}}Query{{else}}Mutation{{/ifEq}}
       DataSourceName: !GetAtt {{toClassName ../type}}DataSource.Name
       RequestMappingTemplate: |
-        #set( $unamepwd = "$util.urlEncode(${context.identity.cognitoIdentityId}):" )
+        #set( $identityId = $context.identity.cognitoIdentityId )
+        #if($context.identity.userArn.matches('arn:aws:iam::\d+:user/.*') && $context.args.cognitoIdentityId)
+          #set( $cognitoIdentityId = $context.args.cognitoIdentityId )
+        #end
+        #set( $unamepwd = "$util.urlEncode($cognitoIdentityId):" )
         {
           "version" : "2017-02-28",
           "operation": "Invoke",
