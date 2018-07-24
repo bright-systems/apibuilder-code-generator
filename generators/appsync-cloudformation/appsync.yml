@@ -126,8 +126,8 @@ Resources:
       DataSourceName: !GetAtt {{toClassName ../type}}DataSource.Name
       RequestMappingTemplate: |
         #set( $identityId = $context.identity.cognitoIdentityId )
-        #if($context.identity.userArn.matches('arn:aws:iam::\d+:user/.*') && $context.args.cognitoIdentityId)
-          #set( $cognitoIdentityId = $context.args.cognitoIdentityId )
+        #if($context.identity.userArn.matches('arn:aws:iam::\d+:user/.*') && $context.args.cognitoIdentityId__)
+          #set( $cognitoIdentityId = $context.args.cognitoIdentityId__ )
         #end
         #set( $unamepwd = "$util.urlEncode($cognitoIdentityId):" )
         {
