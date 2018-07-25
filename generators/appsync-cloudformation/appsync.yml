@@ -125,7 +125,7 @@ Resources:
       TypeName: {{#ifEq method 'GET'}}Query{{else}}Mutation{{/ifEq}}
       DataSourceName: !GetAtt {{toClassName ../type}}DataSource.Name
       RequestMappingTemplate: |
-        #set( $identityId = $context.identity.cognitoIdentityId )
+        #set( $cognitoIdentityId = $context.identity.cognitoIdentityId )
         #if($context.identity.userArn.matches('arn:aws:iam::\d+:user/.*') && $context.args.cognitoIdentityId__)
           #set( $cognitoIdentityId = $context.args.cognitoIdentityId__ )
         #end
