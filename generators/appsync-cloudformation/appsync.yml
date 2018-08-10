@@ -165,7 +165,7 @@ Resources:
       - GqlSchema
       - {{toClassName ../type}}DataSource
 {{/each}}
-{{#eachSubModel ./type ../models}}
+{{#eachSubModel ./type ..}}
   Get{{toClassName (toPlural name)}}By{{toClassName ../type}}IdResolver:
     Type: AWS::AppSync::Resolver
     Properties:
