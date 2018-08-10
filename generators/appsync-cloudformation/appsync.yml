@@ -165,6 +165,51 @@ Resources:
       - GqlSchema
       - {{toClassName ../type}}DataSource
 {{/each}}
+{{#eachSubModel ./type ../models}}
+  Get{{toClassName (toPlural name)}}By{{toClassName ../type}}IdResolver:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt GqlApi.ApiId
+      FieldName: {{_meta_.fieldName}}
+      TypeName: {{toClassName ../type}}
+      DataSourceName: !GetAtt {{toClassName ../type}}DataSource.Name
+      RequestMappingTemplate: |
+        #set( $cognitoIdentityId = $context.identity.cognitoIdentityId )
+        #if($context.identity.userArn.matches('arn:aws:iam::\d+:user/.*') && $context.args.cognitoIdentityId__)
+          #set( $cognitoIdentityId = $context.args.cognitoIdentityId__ )
+        #end
+        #set( $unamepwd = "$util.urlEncode($cognitoIdentityId):" )
+        {
+          "version" : "2017-02-28",
+          "operation": "BatchInvoke",
+          "payload": {
+            "source": "AppSync",
+            "resource": "get{{toClassName (toPlural name)}}By{{toClassName ../type}}Id",
+            "headers": {
+              "Authorization": "Basic $util.base64Encode($unamepwd)",
+            },
+            "pathParameters": {
+              "{{toMethodName ../type}}Id": "$util.escapeJavaScript($context.source.id)"
+            },
+            "queryStringParameters": {
+            }
+          }
+        }
+      ResponseMappingTemplate: |
+        #if($context.result.statusCode >= 200 && $context.result.statusCode <= 299)
+        #set( $kids = $util.parseJson($context.result.body) )
+        #foreach( ${{toMethodName name}} in ${{toMethodName (toPlural name)}} )
+        #set( ${{toMethodName name}}.cognitoIdentityId__ = $context.source.id)
+        #end
+          $util.toJson(${{toMethodName (toPlural name)}})
+        #else
+          $utils.error($util.parseJson($context.result.body).message, $context.result.statusCode.toString(), $util.parseJson($context.result.body))
+        #end
+    DependsOn:
+      - GqlApi
+      - GqlSchema
+      - {{toClassName ../type}}DataSource
+{{/eachSubModel}}
 {{/each}}
 Outputs:
   ApiEndpoint:

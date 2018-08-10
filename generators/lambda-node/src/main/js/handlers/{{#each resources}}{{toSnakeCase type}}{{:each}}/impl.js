@@ -7,3 +7,9 @@ exports.{{toLowerCase method}} = async(event, context) => {
 
 {{/ifNotLast}}
 {{/each}}
+{{#eachSubModel ./type ./_root_.models}}
+exports.{{toMethodName (toPlural name)}}By{{toClassName ../type}}Ids = async({{toMethodName ../type}}Ids) => {
+  throw new Error('Not implemented')
+}
+
+{{/eachSubModel}}
