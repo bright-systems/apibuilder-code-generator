@@ -166,7 +166,7 @@ Resources:
       - {{toClassName ../type}}DataSource
 {{/each}}
 {{#eachSubModel ./type ..}}
-  Get{{toClassName (toPlural name)}}By{{toClassName ../type}}IdResolver:
+  Get{{toClassName (toPlural _meta_.fieldName)}}By{{toClassName ../type}}IdResolver:
     Type: AWS::AppSync::Resolver
     Properties:
       ApiId: !GetAtt GqlApi.ApiId
@@ -184,7 +184,7 @@ Resources:
           "operation": "BatchInvoke",
           "payload": {
             "source": "AppSync",
-            "resource": "get{{toClassName (toPlural name)}}By{{toClassName ../type}}Id",
+            "resource": "get{{toClassName (toPlural _meta_.fieldName)}}By{{toClassName ../type}}Id",
             "headers": {
               "Authorization": "Basic $util.base64Encode($unamepwd)",
             },
@@ -197,11 +197,11 @@ Resources:
         }
       ResponseMappingTemplate: |
         #if($context.result.statusCode >= 200 && $context.result.statusCode <= 299)
-        #set( $kids = $util.parseJson($context.result.body) )
-        #foreach( ${{toMethodName name}} in ${{toMethodName (toPlural name)}} )
-        #set( ${{toMethodName name}}.cognitoIdentityId__ = $context.source.id)
+        #set( ${{toMethodName (toPlural _meta_.fieldName)}} = $util.parseJson($context.result.body) )
+        #foreach( ${{toMethodName _meta_.fieldName}} in ${{toMethodName (toPlural _meta_.fieldName)}} )
+        #set( ${{toMethodName _meta_.fieldName}}.cognitoIdentityId__ = $context.source.id)
         #end
-          $util.toJson(${{toMethodName (toPlural name)}})
+          $util.toJson(${{toMethodName (toPlural _meta_.fieldName)}})
         #else
           $utils.error($util.parseJson($context.result.body).message, $context.result.statusCode.toString(), $util.parseJson($context.result.body))
         #end

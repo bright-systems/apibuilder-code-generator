@@ -14,8 +14,8 @@ exports.handler = (event, context) => {
       const resource = Array.isArray(event) ? event[0].resource : event.resource
       switch (resource) {
         {{#eachSubModel ./type ./_root_}}
-        case 'get{{toClassName (toPlural name)}}By{{toClassName ../type}}Id':
-          return get{{toClassName (toPlural name)}}ByUserId(event, context)
+        case 'get{{toClassName (toPlural _meta_.fieldName)}}By{{toClassName ../type}}Id':
+          return get{{toClassName (toPlural _meta_.fieldName)}}ByUserId(event, context)
         {{/eachSubModel}}
         default:
           if (Array.isArray(event)) {
@@ -28,15 +28,15 @@ exports.handler = (event, context) => {
 }
 {{#eachSubModel ./type ./_root_}}
 
-const get{{toClassName (toPlural name)}}By{{toClassName ../type}}Id = async(event, context) => {
+const get{{toClassName (toPlural _meta_.fieldName)}}By{{toClassName ../type}}Id = async(event, context) => {
   const arrayEvent = Array.isArray(event)
   if (!arrayEvent) event = [event]
-  return impl.{{toMethodName (toPlural name)}}By{{toClassName ../type}}Id(event.map(e => e.pathParameters.{{toMethodName ../type}}Id))
-    .then({{toMethodName (toPlural name)}}Map => {
+  return impl.{{toMethodName (toPlural _meta_.fieldName)}}By{{toClassName ../type}}Ids(event.map(e => e.pathParameters.{{toMethodName ../type}}Id))
+    .then({{toMethodName (toPlural _meta_.fieldName)}}Map => {
       if (arrayEvent) {
-        return event.map(e => ({ statusCode: 201, body: JSON.stringify({{toMethodName (toPlural name)}}Map[e.pathParameters.{{toMethodName ../type}}Id] || []) }))
+        return event.map(e => ({ statusCode: 200, body: JSON.stringify({{toMethodName (toPlural _meta_.fieldName)}}Map[e.pathParameters.{{toMethodName ../type}}Id] || []) }))
       } else {
-        return { statusCode: 200, body: JSON.stringify({{toMethodName (toPlural name)}}Map[event[0].pathParameters.{{toMethodName ../type}}Id] || []) }
+        return { statusCode: 200, body: JSON.stringify({{toMethodName (toPlural _meta_.fieldName)}}Map[event[0].pathParameters.{{toMethodName ../type}}Id] || []) }
       }
   })
 }{{/eachSubModel}}
