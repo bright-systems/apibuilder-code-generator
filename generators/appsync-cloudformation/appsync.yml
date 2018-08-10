@@ -198,8 +198,8 @@ Resources:
       ResponseMappingTemplate: |
         #if($context.result.statusCode >= 200 && $context.result.statusCode <= 299)
         #set( ${{toMethodName (toPlural _meta_.fieldName)}} = $util.parseJson($context.result.body) )
-        #foreach( ${{toMethodName _meta_.fieldName}} in ${{toMethodName (toPlural _meta_.fieldName)}} )
-        #set( ${{toMethodName _meta_.fieldName}}.cognitoIdentityId__ = $context.source.id)
+        #foreach( ${{toMethodName (toSingular _meta_.fieldName)}} in ${{toMethodName (toPlural _meta_.fieldName)}} )
+        #set( ${{toMethodName (toSingular _meta_.fieldName)}}.cognitoIdentityId__ = $context.source.id)
         #end
           $util.toJson(${{toMethodName (toPlural _meta_.fieldName)}})
         #else
