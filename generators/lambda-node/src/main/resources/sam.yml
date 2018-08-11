@@ -42,10 +42,6 @@ Resources:
               - kms:Decrypt
               Effect: Allow
               Resource: '*'
-            - Action:
-              - sns:*
-              Effect: Allow
-              Resource: '*'
       Runtime: nodejs8.10
   {{toClassName type}}FunctionLogRetention:
     Type: AWS::Logs::LogGroup
