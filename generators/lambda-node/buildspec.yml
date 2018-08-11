@@ -17,8 +17,11 @@ phases:
           --s3-prefix {{application.key}}
           --output-template-file sam-packaged.yml
       - echo "{\"Parameters\":{\"Env\":\"$ENV\"}}" > sam-packaged-config.json
+      - echo "{\"Parameters\":{\"ParentStack\":\"$STACK_NAME\"}}" > custom-config.json
 artifacts:
   files:
+    - ./src/main/resources/custom.yml
+    - custom-config.json
     - ./src/main/resources/sam.yml
     - sam-packaged.yml
     - sam-packaged-config.json

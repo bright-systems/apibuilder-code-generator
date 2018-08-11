@@ -56,4 +56,9 @@ Outputs:
     Value: !Ref {{toClassName type}}Function
     Export:
       Name: !Sub '${AWS::StackName}-functions-{{toClassName type}}'
+  {{toClassName type}}FunctionRole:
+    Description: The name of the Lambda function role for the {{toClassName type}} model
+    Value: !Ref {{toClassName type}}FunctionRole
+    Export:
+      Name: !Sub '${AWS::StackName}-roles-{{toClassName type}}'
 {{/each}}

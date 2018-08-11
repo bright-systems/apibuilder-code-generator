@@ -1,0 +1,15 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Implementation-specific resources
+Parameters:
+  ParentStack:
+    Description: The root stack name of the deployment.
+    Type: String
+Conditions:
+  NoOpCondition: !Equals [ 'true', 'false' ]
+Resources:
+  NoOp:
+    Type: AWS::Logs::LogGroup
+    Condition: NoOpCondition
+    Properties:
+      LogGroupName: !Sub '${ParentStack}-noop'
+      LogGroupName: 1
