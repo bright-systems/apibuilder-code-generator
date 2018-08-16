@@ -15,7 +15,7 @@ exports.handler = (event, context) => {
       switch (resource) {
         {{#eachSubModel ./type ./_root_}}
         case 'get{{toClassName (toPlural _meta_.fieldName)}}By{{toClassName ../type}}Id':
-          return get{{toClassName (toPlural _meta_.fieldName)}}ByUserId(event, context)
+          return get{{toClassName (toPlural _meta_.fieldName)}}By{{toClassName ../type}}Id(event, context)
         {{/eachSubModel}}
         default:
           if (Array.isArray(event)) {
