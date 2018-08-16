@@ -38,5 +38,5 @@ const get{{toClassName (toPlural _meta_.fieldName)}}By{{toClassName ../type}}Id 
       } else {
         return { statusCode: 200, body: JSON.stringify({{toMethodName (toPlural _meta_.fieldName)}}Map[event[0].pathParameters.{{toMethodName ../type}}Id] || []) }
       }
-  })
+    })
 }{{/eachSubModel}}
