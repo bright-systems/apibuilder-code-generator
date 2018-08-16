@@ -201,7 +201,7 @@ Resources:
         #foreach( ${{toMethodName (toSingular _meta_.fieldName)}} in ${{toMethodName (toPlural _meta_.fieldName)}} )
         #set( ${{toMethodName (toSingular _meta_.fieldName)}}.cognitoIdentityId__ = $context.source.id)
         #end
-          $util.toJson(${{toMethodName (toPlural _meta_.fieldName)}})
+          $util.toJson(${{toMethodName (toPlural _meta_.fieldName)}}{{#unless _meta_.isArray}}[0]{{/unless}})
         #else
           $utils.error($util.parseJson($context.result.body).message, $context.result.statusCode.toString(), $util.parseJson($context.result.body))
         #end
