@@ -31,7 +31,7 @@ exports.handler = (event, context) => {
 const get{{toClassName (toPlural _meta_.fieldName)}}By{{toClassName ../type}}Id = async(event, context) => {
   const arrayEvent = Array.isArray(event)
   if (!arrayEvent) event = [event]
-  return impl.{{toMethodName (toPlural _meta_.fieldName)}}By{{toClassName ../type}}Ids(event.map(e => e.pathParameters.{{toMethodName ../type}}Id))
+  return impl.{{toMethodName (toPlural _meta_.fieldName)}}By{{toClassName ../type}}Ids(event.map(e => e.pathParameters.{{toMethodName ../type}}Id), event)
     .then({{toMethodName (toPlural _meta_.fieldName)}}Map => {
       if (arrayEvent) {
         return event.map(e => ({ statusCode: 200, body: JSON.stringify({{toMethodName (toPlural _meta_.fieldName)}}Map[e.pathParameters.{{toMethodName ../type}}Id] || []) }))

@@ -8,7 +8,7 @@ exports.{{toLowerCase method}} = async(event, context) => {
 {{/ifNotLast}}
 {{/each}}
 {{#eachSubModel ./type ./_root_}}
-exports.{{toMethodName (toPlural _meta_.fieldName)}}By{{toClassName ../type}}Ids = async({{toMethodName ../type}}Ids) => {
+exports.{{toMethodName (toPlural _meta_.fieldName)}}By{{toClassName ../type}}Ids = async({{toMethodName ../type}}Ids, event) => {
   throw new Error('Not implemented')
 }
 
