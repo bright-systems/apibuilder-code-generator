@@ -126,8 +126,12 @@ Resources:
       DataSourceName: !GetAtt {{toClassName ../type}}DataSource.Name
       RequestMappingTemplate: |
         #set( $cognitoIdentityId = $context.identity.cognitoIdentityId )
-        #if($context.identity.userArn.matches('arn:aws:iam::\d+:user/.*') && $context.args.cognitoIdentityId__)
-          #set( $cognitoIdentityId = $context.args.cognitoIdentityId__ )
+        #if($context.identity.userArn.matches('arn:aws:iam::\d+:user/.*'))
+          #if($context.args.cognitoIdentityId__)
+            #set( $cognitoIdentityId = $context.args.cognitoIdentityId__ )
+          #elseif( $context.source.cognitoIdentityId__ )
+            #set( $cognitoIdentityId = $context.source.cognitoIdentityId__ )
+          #end
         #end
         #set( $unamepwd = "$util.urlEncode($cognitoIdentityId):" )
         {
@@ -156,7 +160,13 @@ Resources:
         }
       ResponseMappingTemplate: |
         #if($context.result.statusCode >= 200 && $context.result.statusCode <= 299)
-          $context.result.body
+          #set( $result = $util.parseJson($context.result.body) )
+          #if($context.args.cognitoIdentityId__)
+            #set( $result.cognitoIdentityId__ = $context.args.cognitoIdentityId__ )
+          #elseif($context.source.cognitoIdentityId__)
+            #set( $result.cognitoIdentityId__ = $context.source.cognitoIdentityId__ )
+          #end
+          $util.toJson($result)
         #else
           $utils.error($util.parseJson($context.result.body).message, $context.result.statusCode.toString(), $util.parseJson($context.result.body))
         #end
@@ -175,8 +185,12 @@ Resources:
       DataSourceName: !GetAtt {{toClassName ../type}}DataSource.Name
       RequestMappingTemplate: |
         #set( $cognitoIdentityId = $context.identity.cognitoIdentityId )
-        #if($context.identity.userArn.matches('arn:aws:iam::\d+:user/.*') && $context.args.cognitoIdentityId__)
-          #set( $cognitoIdentityId = $context.args.cognitoIdentityId__ )
+        #if($context.identity.userArn.matches('arn:aws:iam::\d+:user/.*'))
+          #if($context.args.cognitoIdentityId__)
+            #set( $cognitoIdentityId = $context.args.cognitoIdentityId__ )
+          #elseif( $context.source.cognitoIdentityId__ )
+            #set( $cognitoIdentityId = $context.source.cognitoIdentityId__ )
+          #end
         #end
         #set( $unamepwd = "$util.urlEncode($cognitoIdentityId):" )
         {
@@ -199,7 +213,11 @@ Resources:
         #if($context.result.statusCode >= 200 && $context.result.statusCode <= 299)
         #set( ${{toMethodName (toPlural _meta_.fieldName)}} = $util.parseJson($context.result.body) )
         #foreach( ${{toMethodName (toSingular _meta_.fieldName)}} in ${{toMethodName (toPlural _meta_.fieldName)}} )
-        #set( ${{toMethodName (toSingular _meta_.fieldName)}}.cognitoIdentityId__ = $context.source.id)
+          #if($context.args.cognitoIdentityId__)
+            #set( ${{toMethodName (toSingular _meta_.fieldName)}}.cognitoIdentityId__ = $context.args.cognitoIdentityId__)
+          #elseif($context.source.cognitoIdentityId__)
+            #set( $result.cognitoIdentityId__ = $context.source.cognitoIdentityId__ )
+          #end
         #end
           $util.toJson(${{toMethodName (toPlural _meta_.fieldName)}}{{#unless _meta_.isArray}}[0]{{/unless}})
         #else
