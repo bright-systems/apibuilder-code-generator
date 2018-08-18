@@ -219,7 +219,7 @@ Resources:
             #set( $result.cognitoIdentityId__ = $context.source.cognitoIdentityId__ )
           #end
         #end
-          {{#unless _meta_.isArray}}#if( ${{toMethodName (toPlural _meta_.fieldName)}}.length > 0 )
+          {{#unless _meta_.isArray}}#if( ${{toMethodName (toPlural _meta_.fieldName)}}.size() > 0 )
           {{/unless}}$util.toJson(${{toMethodName (toPlural _meta_.fieldName)}}{{#unless _meta_.isArray}}[0]{{/unless}}){{#unless _meta_.isArray}}
           #else
           null
