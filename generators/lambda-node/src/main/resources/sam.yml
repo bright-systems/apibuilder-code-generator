@@ -29,7 +29,7 @@ Resources:
             Schedule: rate(5 minutes)
             Input: '{"httpMethod": "PING"}'
       FunctionName: !Sub '${AWS::StackName}-{{toSnakeCase type '-'}}'
-      Handler: src/main/js/handlers/{{toSnakeCase type}}/index.handler
+      Handler: src/main/js/handlers/{{toSnakeCase type}}.handler
       Policies:
         - AWSLambdaBasicExecutionRole
         - Version: 2012-10-17
