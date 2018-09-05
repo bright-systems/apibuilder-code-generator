@@ -44,7 +44,7 @@ Resources:
                           !Sub '${FunctionStack}-functions-{{toClassName type}}'
                       - ':*'
 {{/each}}
-      RoleName: !Sub '${AWS::StackName}-lambda-datasource'
+      RoleName: !Sub '${AWS::StackName}-lambda-role'
   GqlApi:
     Type: AWS::AppSync::GraphQLApi
     Properties:
