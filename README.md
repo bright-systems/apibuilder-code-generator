@@ -8,7 +8,7 @@ https://app.apibuilder.io/apicollective/apibuilder-generator/latest
 
 
 ## Deployment
-CodePipeline, using this template: https://s3.amazonaws.com/com.getbright.cloudformation/lambda-pipeline.yml
+CodePipeline, using this template: [resources/pipeline.yml]
 
 Commits to master will kick off an automatic deployment.
 
